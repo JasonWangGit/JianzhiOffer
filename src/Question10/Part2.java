@@ -11,7 +11,7 @@ public class Part2 {
 		Scanner scanner = new Scanner(System.in);
 		while (scanner.hasNext()) {
 			int i = scanner.nextInt();
-			System.out.println(fib(i));
+			System.out.println(numWays(i));
 		}
 		scanner.close();
 	}

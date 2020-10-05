@@ -1,5 +1,7 @@
 package Question09;
 
+//https://leetcode-cn.com/problems/yong-liang-ge-zhan-shi-xian-dui-lie-lcof/
+
 public class Main {
 	// main() just for test, if you wanna submit on leetcode, reference to the
 	// function() beneath main()

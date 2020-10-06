@@ -15,14 +15,12 @@ public class Solution {
 
 	public static int findRepeatNumber(int[] nums) {
 		Map<Integer, Boolean> map = new HashMap<>();
-		int n = 0;
 		int temp = 0;
 		for(int i : nums) {
 			if(!map.containsKey(i)) {
 				map.put(i, false);
 			} else {
 				if(!map.get(i)) {
-					n++;
 					map.replace(i, true);
 					temp =  i;
 					break;

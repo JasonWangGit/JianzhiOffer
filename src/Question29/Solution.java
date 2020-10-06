@@ -6,14 +6,13 @@ public class Solution {
 	// main() just for test, if you wanna submit on leetcode, reference to the
 	// function() beneath main()
 	public static void main(String[] args) {
-		// int[][] matrix = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}};
-		int[][] matrix = null;
+		int[][] matrix = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 10, 11, 12}};
 		spiralOrder(matrix);
 	}
 	
 	public static int[] spiralOrder(int[][] matrix) {
-		if(matrix == null) {
-			return null;
+		if(matrix == null || matrix.length == 0 || matrix[0].length == 0) {
+			return new int[0];
 		}
 		int start = 0;
 		int right = matrix[0].length - 1;

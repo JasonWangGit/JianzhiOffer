@@ -31,14 +31,8 @@ public class Solution {
 	}
 	
 	public static ListNode getIntersectionNode(ListNode headA, ListNode headB) {
-		if(headA == null && headB == null) {
+		if(headA == null || headB == null) {
 			return null;
-		}
-		if(headA == null && headB != null) {
-			return headB;
-		}
-		if(headA != null && headB == null) {
-			return headA;
 		}
 		int countA = 0;
 		int countB = 0;

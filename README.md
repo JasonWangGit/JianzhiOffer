@@ -58,15 +58,15 @@
 - 字符串为空
   - 测试用例：`String s = null;`
 
-### 面试题5 替换空格
+### 面试题6 从尾到头打印链表
 
-#### [题目](https://leetcode-cn.com/problems/ti-huan-kong-ge-lcof/)
+#### [题目](https://leetcode-cn.com/problems/cong-wei-dao-tou-da-yin-lian-biao-lcof/)
 
-请实现一个函数，把字符串 s中的每个空格替换成"%20"。
+输入一个链表的头节点，从尾到头反过来返回每个节点的值（用数组返回）。
 
-- 思路1：遍历并利用StringBuilder
-- 思路2：利用.replaceAll
+- 思路1：利用辅助栈
+- 思路2：利用递归
 
 ##### 边界条件：
-- 字符串为空
-  - 测试用例：`String s = null;`
+- 链表为空（实际上，由于while循环的条件，不用考虑）
+  - 测试用例：`ListNode head = null;`

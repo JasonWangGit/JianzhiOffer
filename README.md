@@ -121,11 +121,11 @@
 				stringBuilder.append(s.charAt(i));
 		}
 		return stringBuilder.toString();
-    }
+	}
 
 	public static String replaceSpaceByReplaceAll(String s) {
 		return s.replaceAll(" ", "%20");
-    }
+	}
 ```
 
 
@@ -329,19 +329,19 @@
 	public CQueue_v2() {
 		this.stack1 = new Stack<>();
 		this.stack2 = new Stack<>();
-    }
+	}
     
-    public void appendTail(int value) {
-    	stack1.push(value);
-    }
+	public void appendTail(int value) {
+		stack1.push(value);
+	}
     
-    public int deleteHead() {
-    	if(stack2.isEmpty())
-    		if(stack1.isEmpty())
-    			return -1;
-    		else
+	public int deleteHead() {
+		if(stack2.isEmpty())
+			if(stack1.isEmpty())
+				return -1;
+			else
 				while(!stack1.isEmpty())
 					stack2.push(stack1.pop());
-    	return stack2.pop();
-    }
+		return stack2.pop();
+	}
 ```

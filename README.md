@@ -497,6 +497,45 @@ $$
 \begin{matrix} a & \underline b & t & g \\ c & \underline f & \underline c & s \\ j & d & \underline e & h \end{matrix}
 $$
 
+- 思路1：回溯法（递归实现）
+
+##### 思路1
+
+- 递归参数：
+  - 字符矩阵，判断是否访问过的矩阵，目标字符串
+  - 当前访问到目标字符串的位置
+  - 当前访问到字符矩阵的位置：行、列
+- 边界条件：
+  - 字符矩阵当前行、列位置的值不等于目标字符串当前位置的值：false
+  - 字符矩阵当前列、列位置已被访问：false
+  - 矩阵行、列越界：false
+    - 行小于0或大于等于length-1
+    - 列小于0或大于length-1
+  - 当前访问到目标字符串的位置等于目标字符串的长度-1：true
+- 前进段：
+  - 注意前进前需将已访问置为true，前进后将已访问置为false
+  - 向上
+    - 行-1，列不动
+  - 向下
+    - 行+1，列不动
+  - 向左
+    - 行不动，列-1
+  - 向右
+    - 行不动，列+1
+- 返回段：
+  - 返回上、下、左、右四种情况的或
+
+##### 特殊输入
+
+- 目标字符串为空：true
+  - 测试用例：`String word = null;` 
+- 字符矩阵为空：false
+  - 测试用例：`char[][] board = false;`
+- 目标字符串长度为0：true
+  - 测试用例： `String word = "";` 
+- 字符矩阵长度为0：false
+  - 测试用例：`char[][] board = new char[0][0];`
+
 ##### 核心代码
 
 ```java
@@ -517,7 +556,7 @@ $$
 				if(recur(board, isVisited, word, 0, i, j))
 					return true;
 		return false;
-    }
+	}
 	
 	public static boolean recur(char[][] board, boolean[][] isVisited, String word,
 			int index, int i, int j) {

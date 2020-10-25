@@ -506,11 +506,11 @@ $$
   - 当前访问到目标字符串的位置
   - 当前访问到字符矩阵的位置：行、列
 - 边界条件：
-  - 字符矩阵当前行、列位置的值不等于目标字符串当前位置的值：false
-  - 字符矩阵当前列、列位置已被访问：false
   - 矩阵行、列越界：false
     - 行小于0或大于等于length-1
     - 列小于0或大于length-1
+  - 字符矩阵当前行、列位置的值不等于目标字符串当前位置的值：false
+  - 字符矩阵当前列、列位置已被访问：false
   - 当前访问到目标字符串的位置等于目标字符串的长度-1：true
 - 前进段：
   - 注意前进前需将已访问置为true，前进后将已访问置为false
@@ -560,9 +560,9 @@ $$
 	
 	public static boolean recur(char[][] board, boolean[][] isVisited, String word,
 			int index, int i, int j) {
-		if(word.charAt(index) != board[i][j] || isVisited[i][j])
-			return false;
 		if(i < 0 || j < 0 || i >= board.length || j >= board[0].length)
+			return false;
+		if(word.charAt(index) != board[i][j] || isVisited[i][j])
 			return false;
 		if(index == word.length() - 1)
 			return true;
@@ -575,5 +575,49 @@ $$
 		isVisited[i][j] = false;
 		return flag;
 	}
+```
+
+### 面试题13：机器人的运动范围
+
+#### [题目](https://leetcode-cn.com/problems/ji-qi-ren-de-yun-dong-fan-wei-lcof/)
+
+地上有一个m行n列的方格 。一个机器人从坐标 (0, 0) 的格子开始移动，它每次可以向左、右、上、下移动一格，但不能进入行坐标和列坐标的**数位之和**大于k的格子。例如，当k为18时，机器人能够进入方格 (35, 37) ，因为3+5+3+7=18。但它不能进入方格 (35, 38)，因为3+5+3+8=19。请问该机器人能够到达多少个格子？
+
+- 思路1：回溯法（递归实现）
+
+##### 思路1
+
+- 递归参数：
+  - 判断是否访问过的矩阵
+  - k值
+  - 当前访问到矩阵的位置：行、列
+- 边界条件：
+  - 矩阵行、列越界：0
+    - 行小于0或大于等于length-1
+    - 列小于0或大于length-1
+  - 矩阵当前列、列位置已被访问：0
+  - 矩阵当前列、列位置是不可进入的：0
+  - 矩阵当前列、列位置是可进入的：1
+- 前进段：
+  - 注意前进前需将已访问置为true
+  - 向上
+    - 行-1，列不动
+  - 向下
+    - 行+1，列不动
+  - 向左
+    - 行不动，列-1
+  - 向右
+    - 行不动，列+1
+- 返回段：
+  - 返回上、下、左、右四种情况的和
+
+##### 特殊输入
+
+- m或n的值小于0
+
+##### 核心代码
+
+```java
+
 ```
 

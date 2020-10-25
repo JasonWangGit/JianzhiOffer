@@ -372,7 +372,7 @@ $$
 		if(n == 1)
 			return 1;
 		return fibByRecur(n - 1) + fibByRecur(n - 2);
-    }
+	}
 	
 	public static int fibByLoop(int n) {
 		if(n <= 0)
@@ -388,7 +388,7 @@ $$
 			fib_1 = fib_n;
 		}
 		return fib_n;
-    }
+	}
 ```
 
 #### [题目二：青蛙跳台阶问题](https://leetcode-cn.com/problems/qing-wa-tiao-tai-jie-wen-ti-lcof/)
@@ -420,6 +420,72 @@ $$
 			fib_1 = fib_n;
 		}
 		return fib_n;
-    }
+	}
 ```
 
+### 面试题11：旋转数组的最小数字
+
+#### [题目](https://leetcode-cn.com/problems/xuan-zhuan-shu-zu-de-zui-xiao-shu-zi-lcof/)
+
+把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。例如，数组 {3,4,5,1,2} 为 {1,2,3,4,5} 的一个旋转，该数组的最小值为1。  
+
+- 思路1：遍历
+  - 时间复杂度O(n)
+- 思路2：利用二分查找的原理
+  - 时间复杂度O(logn)
+
+##### 思路2
+
+- x循环：利用left、right两个指针，不断缩小寻找的范围
+- 循环结束条件：
+  - left指针与right指针相邻，right指向的元素就是最小值
+
+- 对于大多数情况的正常旋转数组
+  - 如果middle大于等于left，则让left=middle
+  - 如果middle小于等于right，则让right=middle
+- 并未旋转的数组
+  - 根据第一个元素与最后一个元素的大小判定，直接返回第一个元素作为最小值
+- 特殊数组，如{1, 0, 1, 1, 1}
+  - 如果出现left=middle=right，则只能遍历数组寻找最小值
+
+##### 特殊输入
+
+- 数组为空
+  - 测试用例：`int[] numbers = null;`
+- 数组长度为0
+  - 测试用例：`int[] numbers = new int[0];`
+- 数组并未旋转
+  - 测试用例：`int[] numbers = {1, 2, 3, 4, 5};`
+- 特殊数组
+  - 测试用例：`int[] numbers = {1, 0, 1, 1, 1};` `int[] numbers = {2, 2, 2, 0, 1};`
+
+##### 核心代码
+
+```java
+	public static int minArray(int[] numbers) {
+		if (numbers[0] < numbers[numbers.length - 1])
+			return numbers[0];
+		int left = 0;
+		int right = numbers.length - 1;
+		int middle = 0;
+		while (left != right - 1) {
+			middle = (left + right) / 2;
+			if (numbers[middle] == numbers[left] && numbers[middle] == numbers[right]) {
+				int min = numbers[0];
+				for (int i : numbers) {
+					min = Math.min(min, i);
+				}
+				return min;
+			}
+			if (numbers[middle] >= numbers[left])
+				left = middle;
+			if (numbers[middle] <= numbers[right])
+				right = middle;
+		}
+		return numbers[right];
+	}
+```
+
+### 面试题12：矩阵中的路径
+
+#### [题目](https://leetcode-cn.com/problems/ju-zhen-zhong-de-lu-jing-lcof/)

@@ -160,14 +160,14 @@
 		while(!stack.isEmpty())
 			nums[i++] = stack.pop();
 		return nums;
-    }
+	}
 	
 	public static void reversePrintByRecur(ListNode head) {
 		if(head == null)
 			return;
 		reversePrintByRecur(head.next);
 		System.out.print(head.val + " ");
-    }
+	}
 ```
 
 

@@ -36,9 +36,9 @@ public class Solution {
 	
 	public static boolean recur(char[][] board, boolean[][] isVisited, String word,
 			int index, int i, int j) {
-		if(word.charAt(index) != board[i][j] || isVisited[i][j])
-			return false;
 		if(i < 0 || j < 0 || i >= board.length || j >= board[0].length)
+			return false;
+		if(word.charAt(index) != board[i][j] || isVisited[i][j])
 			return false;
 		if(index == word.length() - 1)
 			return true;

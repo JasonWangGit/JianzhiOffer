@@ -352,7 +352,7 @@
 
 写一个函数，输入 n ，求斐波那契（Fibonacci）数列的第 n 项。斐波那契数列的定义如下：
 $$
-f(n) = \begin{cases}0&\text{n = 0}\\1&\text{n = 1}\\f(n-1)+f(n-2)&\text{n > 1}\end{cases}
+f(n) = \begin{cases} 0 & \text{n = 0} \\ 1 & \text{n = 1} \\ f(n-1)+f(n-2) & \text{n > 1} \end{cases}
 $$
 
 - 思路1：递归，从上（n）至下（1）求解
@@ -463,23 +463,25 @@ $$
 
 ```java
 	public static int minArray(int[] numbers) {
-		if (numbers[0] < numbers[numbers.length - 1])
+		if(numbers == null || numbers.length == 0)
+			return -1;
+		if(numbers[0] < numbers[numbers.length - 1])
 			return numbers[0];
 		int left = 0;
 		int right = numbers.length - 1;
 		int middle = 0;
-		while (left != right - 1) {
+		while(left != right - 1) {
 			middle = (left + right) / 2;
-			if (numbers[middle] == numbers[left] && numbers[middle] == numbers[right]) {
+			if(numbers[middle] == numbers[left] && numbers[middle] == numbers[right]) {
 				int min = numbers[0];
-				for (int i : numbers) {
+				for(int i : numbers) {
 					min = Math.min(min, i);
 				}
 				return min;
 			}
-			if (numbers[middle] >= numbers[left])
+			if(numbers[middle] >= numbers[left])
 				left = middle;
-			if (numbers[middle] <= numbers[right])
+			if(numbers[middle] <= numbers[right])
 				right = middle;
 		}
 		return numbers[right];
@@ -489,3 +491,50 @@ $$
 ### 面试题12：矩阵中的路径
 
 #### [题目](https://leetcode-cn.com/problems/ju-zhen-zhong-de-lu-jing-lcof/)
+
+请设计一个函数，用来判断在一个矩阵中是否存在一条包含某字符串所有字符的路径。路径可以从矩阵中的任意一格开始，每一步可以在矩阵中向左、右、上、下移动一格。如果一条路径经过了矩阵的某一格，那么该路径不能再次进入该格子。例如，在下面的3×4的矩阵中包含一条字符串“bfce”的路径（路径中的字母用下画线标出）。但矩阵中不包含字符串“abfb”的路径，因为字符串的第一个字符b占据了矩阵中的第一行第二个格子之后，路径不能再次进入这个格子。
+$$
+\begin{matrix} a & \underline b & t & g \\ c & \underline f & \underline c & s \\ j & d & \underline e & h \end{matrix}
+$$
+
+##### 核心代码
+
+```java
+	public static boolean exist(char[][] board, String word) {
+		if(word == null)
+			return true;
+		if(board == null)
+			return false;
+		if(word.length() == 0)
+			return true;
+		if(board.length == 0)
+			return false;
+		if(word.length() > board.length * board[0].length)
+			return false;
+		boolean[][] isVisited = new boolean[board.length][board[0].length];
+		for(int i = 0; i < board.length; i++)
+			for(int j = 0; j < board[0].length; j++)
+				if(recur(board, isVisited, word, 0, i, j))
+					return true;
+		return false;
+    }
+	
+	public static boolean recur(char[][] board, boolean[][] isVisited, String word,
+			int index, int i, int j) {
+		if(word.charAt(index) != board[i][j] || isVisited[i][j])
+			return false;
+		if(i < 0 || j < 0 || i >= board.length || j >= board[0].length)
+			return false;
+		if(index == word.length() - 1)
+			return true;
+		isVisited[i][j] = true;
+		index++;
+		boolean flag = recur(board, isVisited, word, index, i - 1, j) ||
+				recur(board, isVisited, word, index, i + 1, j) ||
+				recur(board, isVisited, word, index, i, j - 1) ||
+				recur(board, isVisited, word, index, i, j + 1);
+		isVisited[i][j] = false;
+		return flag;
+	}
+```
+

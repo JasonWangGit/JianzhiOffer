@@ -273,7 +273,7 @@
 ##### 核心代码
 
 ```java
-public static TreeNode findNext(TreeNode root, TreeNode treeNode) {
+	public static TreeNode findNext(TreeNode root, TreeNode treeNode) {
 		if(root == null || treeNode == null)
 			return null;
 		if(treeNode.right != null) {

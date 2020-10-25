@@ -345,3 +345,81 @@
 		return stack2.pop();
 	}
 ```
+
+### 面试题10 斐波那契数列
+
+#### [题目一：求斐波那契数列的第n项](https://leetcode-cn.com/problems/fei-bo-na-qi-shu-lie-lcof/)
+
+写一个函数，输入 n ，求斐波那契（Fibonacci）数列的第 n 项。斐波那契数列的定义如下：
+$$
+f(n) = \begin{cases}0&\text{n = 0}\\1&\text{n = 1}\\f(n-1)+f(n-2)&\text{n > 1}\end{cases}
+$$
+
+- 思路1：递归，从上（n）至下（1）求解
+  - 问题在于会重复计算很多次
+- 思路2：循环，从下（1）至上（n）求解
+
+##### 特殊输入
+
+- n小于0
+
+##### 核心代码
+
+```java
+	public static int fibByRecur(int n) {
+		if(n <= 0)
+			return 0;
+		if(n == 1)
+			return 1;
+		return fibByRecur(n - 1) + fibByRecur(n - 2);
+    }
+	
+	public static int fibByLoop(int n) {
+		if(n <= 0)
+			return 0;
+		if(n == 1)
+			return 1;
+		int fib_0 = 0;
+		int fib_1 = 1;
+		int fib_n = 0;
+		for(int i = 2; i <= n; i++) {
+			fib_n = (fib_0 + fib_1) % 1000000007;
+			fib_0 = fib_1;
+			fib_1 = fib_n;
+		}
+		return fib_n;
+    }
+```
+
+#### [题目二：青蛙跳台阶问题](https://leetcode-cn.com/problems/qing-wa-tiao-tai-jie-wen-ti-lcof/)
+
+一只青蛙一次可以跳上1级台阶，也可以跳上2级台阶。求该青蛙跳上一个 n级的台阶总共有多少种跳法。
+
+- 思路1：同题目一
+- 思路2：同题目二
+- 这里需要注意的问题是：f(0)是1，f(1)是1，f(2)是2，这与题目一是有区别的，之后的规律不变
+
+##### 特殊输入
+
+- n小于0
+
+##### 核心代码
+
+```java
+	public static int numWays(int n) {
+		if(n < 0)
+			return -1;
+		if(n <= 1)
+			return 1;
+		int fib_0 = 1;
+		int fib_1 = 1;
+		int fib_n = 0;
+		for(int i = 2; i <= n; i++) {
+			fib_n = (fib_0 + fib_1) % 1000000007;
+			fib_0 = fib_1;
+			fib_1 = fib_n;
+		}
+		return fib_n;
+    }
+```
+

@@ -792,3 +792,67 @@ $$
 ### 面试题16：数值的整数次方
 
 #### [题目](https://leetcode-cn.com/problems/shu-zhi-de-zheng-shu-ci-fang-lcof/)
+
+实现函数double Power(double base, int exponent)，求base的exponent次方。不得使用库函数，同时不需要考虑大数问题。
+
+- 思路1：普通循环，乘n次
+- 思路2：二分法，递归实现
+- 思路3：二分法，循环实现
+
+##### - 思路3
+
+$$
+公式
+				
+					
+				
+				
+						
+				
+			
+							为偶数为奇数a^n = \begin{cases} a^{n/2} \cdot a^{n/2} & \text{n为偶数} \\ a^{(n-1)/2} \cdot a^{(n-1)/2} \cdot a & \text{n为奇数} \end{cases}
+$$
+
+- 初始条件
+  - n为0时
+    - x为0：错误（异常）
+    - x不为0：return 0
+  - n大于0
+  - n小于0
+    - `n = -n;`
+    - `x = 1 / x;`
+- 循环体内
+  - n为偶数时
+    - `x *= x;` `n >>= 1;`
+  - n为奇数时（`(n & 1) == 1`）
+    - 除上述外，`result *= x;`
+
+##### 核心代码
+
+```java
+	public static double myPowByLoop(double x, int n) {
+		double result = 1;
+		long p = n;
+		if(p == 0 && isEqual(x, 0.0))
+			return 0.0;
+		if(p == 0 && !isEqual(x, 0.0))
+			return 1.0;
+		if(p < 0) {
+			x = 1 / x;
+			p = -p;
+		}
+		while(p > 0) {
+			if((p & 1) == 1)
+				result *= x;
+			x *= x;
+			p >>= 1;
+		}
+		return result;
+    }
+```
+
+### 面试题17：打印从1到最大的n位数
+
+#### [题目](https://leetcode-cn.com/problems/da-yin-cong-1dao-zui-da-de-nwei-shu-lcof/)
+
+输入数字 n，按顺序打印出从 1 到最大的 n 位十进制数。比如输入 3，则打印出 1、2、3 一直到最大的 3 位数 999。

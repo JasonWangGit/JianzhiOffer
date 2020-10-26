@@ -1,5 +1,7 @@
 package Question17;
 
+// https://leetcode-cn.com/problems/da-yin-cong-1dao-zui-da-de-nwei-shu-lcof/
+
 import java.util.Scanner;
 
 public class Solution {
@@ -9,41 +11,56 @@ public class Solution {
 	public static void main(String[] args) {
 		Scanner scanner = new Scanner(System.in);
 		while (scanner.hasNext()) {
-			int i = scanner.nextInt();
-			func(i);
+			int n = scanner.nextInt();
+			printBigNumbers(n);
 		}
 		scanner.close();
 	}
 	
-	public static void func(int n) {
-		for(int i = 1; i <= 1 ; i++) {
-			for(int j = 0; j <= 9; j++) {
-				System.out.print(j + ",");
-			}
-		}
-	}
-	
-	
-	public static void print0_9()
-	{
-		
-	}
-
 	public static int[] printNumbers(int n) {
-		int[] ints = {0,0,0};
-		return ints;
+		int max = 1;
+		while(n > 0) {
+			max *= 10;
+			n--;
+		}
+		int[] array = new int[max - 1];
+		for(int i = 0; i < max - 1; i++)
+			array[i] = i + 1;
+		return array;
+    }
+
+	public static void printBigNumbers(int n) {
+		char[] chars = new char[n];
+		recur(chars, n, 0);
 	}
 	
-	public static void generateNumbers(int n) {
-		if(n == 1) {
-			for(int i = 0; i < 10; i++) {
-				str.append(i);
-				str.append(',');
-			}
+	public static void recur(char[] chars, int n, int index) {
+		if(index == n) {
+			removeZeroPrinter(chars);
 			return;
-		} else {
-			for(int i = 0; i < 10; i++) {
-			}
 		}
+		for(int i = 0; i < 10; i++) {
+			chars[index] = (char) ('0' + i);
+			recur(chars, n, index + 1);
+		}
+	}
+	
+	public static void removeZeroPrinter(char[] chars) {
+		int index = 0;
+		boolean firstFlag = true;
+		while(true) {
+			if(index == chars.length) {
+				System.out.print("");
+				firstFlag = false;
+				break;
+			}
+			if(chars[index] != '0')
+				break;
+			index++;
+		}
+		while(index < chars.length)
+			System.out.print(chars[index++]);
+		if(firstFlag)
+			System.out.print(" ");
 	}
 }

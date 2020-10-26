@@ -690,6 +690,7 @@ $$
 - 所以应该尽可能多地剪长度为3的绳子
 - 一直按长度为3去剪，如果最后剩余4，则取2 * 2
 - 如果剩余长度小于4，则取对应长度即可
+- **注意**：result用long的原因是result *= 3有可能会越界
 
 ##### 特殊输入
 
@@ -748,5 +749,43 @@ $$
 		}
 		return (int) result;	
     }
+```
+
+### 面试题15：二进制种1的个数
+
+#### [题目](https://leetcode-cn.com/problems/er-jin-zhi-zhong-1de-ge-shu-lcof/)
+
+请实现一个函数，输入一个整数，输出该数二进制表示中 1 的个数。例如，把 9 表示成二进制是 1001，有 2 位是 1。因此，如果输入 9，则该函数输出 2。
+
+- 思路1：利用Java中的左边补零右移（>>>）
+- 思路2：利用n & n - 1：将n最右边的1变成0
+
+##### 特殊输入
+
+- n等于0
+
+- n小于0
+
+##### 核心代码
+
+```java
+	public static int hammingWeightByRightShift(int n) {
+		int count = 0;
+		while(n != 0) {
+			if((n & 1) != 0)
+				count++;
+			n >>>= 1;
+		}
+		return count;
+	}
+	
+	public static int hammingWeight(int n) {
+		int count = 0;
+		while(n != 0) {
+			n &= n - 1;
+			count++;
+		}
+		return count;
+	}
 ```
 

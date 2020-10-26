@@ -802,15 +802,7 @@ $$
 ##### - 思路3
 
 $$
-公式
-				
-					
-				
-				
-						
-				
-			
-							为偶数为奇数a^n = \begin{cases} a^{n/2} \cdot a^{n/2} & \text{n为偶数} \\ a^{(n-1)/2} \cdot a^{(n-1)/2} \cdot a & \text{n为奇数} \end{cases}
+a^n = \begin{cases} a^{n/2} \cdot a^{n/2} & \text{n为偶数} \\ a^{(n-1)/2} \cdot a^{(n-1)/2} \cdot a & \text{n为奇数} \end{cases}
 $$
 
 - 初始条件

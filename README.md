@@ -722,7 +722,7 @@ $$
 			maxArray[i] = max;
 		}
 		return maxArray[n];
-    }
+	}
 	
 	public static int cuttingRopeByGreedy(int n) {
 		if(n < 0)
@@ -748,7 +748,7 @@ $$
 			result %= 1000000007;
 		}
 		return (int) result;	
-    }
+	}
 ```
 
 ### 面试题15：二进制种1的个数

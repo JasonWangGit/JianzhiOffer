@@ -789,3 +789,6 @@ $$
 	}
 ```
 
+### 面试题16：数值的整数次方
+
+#### [题目](https://leetcode-cn.com/problems/shu-zhi-de-zheng-shu-ci-fang-lcof/)

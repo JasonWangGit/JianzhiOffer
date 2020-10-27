@@ -1107,5 +1107,78 @@ $$
 
 
 
-### [题目]()
+### [题目](https://leetcode-cn.com/problems/shu-de-zi-jie-gou-lcof/)
+
+输入两棵二叉树A和B，判断B是不是A的子结构。(约定空树不是任意一个树的子结构)
+
+- 思路1：二层递归
+  - 外层前序遍历A树，判断当前节点与B的根节点值是否相同
+  - 内层同时遍历A的子树、B树，判断从A从当前节点开始的子树是否包含B树
+
+##### 思路1
+
+- 外层递归
+  - 递归参数：
+    - A、B树
+  - 边界条件：
+    - B为空：false（出于leetcode题目的要求，同时便于为下一步判断增加前置条件）
+    - A当前节点为空（B不为空）：false
+    - 同时内层递归还会为外层递归带来”边界“（如果内层返回了true，则不会继续遍历）
+  - 前进段：
+    - 如果A的当前节点值等于B的根的值
+      - 进入内层递归
+    - 如果上述的结果为false
+      - 进入A的左子树
+    - 如果上述的结果（包含第一条和第二条）为false
+      - 进入右子树
+  - 返回段：
+    - 返回当前的result
+- 内层递归
+  - 递归参数：
+    - A的子树、B树
+  - 边界条件：
+    - B当前节点为空，代表遍历B完成且未发现不同值的节点：true
+    - A当前节点为空（B当前节点不为空）：false
+  - 前进段：
+    - 如果A的当前节点值等于B的当前节点值
+      - 比较A.left与B.left
+      - 比较A.right与B.right
+    - 不相等：false
+  - 返回段：
+    - 返回A、B左右子树对比的与
+
+##### 特殊输入
+
+- A和（或）B为空
+- B的根对应的值位于A最下层的叶子节点（或者其他会导致A为空但B不为空的情形：会导致外层递归的错误）
+
+##### 核心代码
+
+```java
+	public static boolean isSubStructure(TreeNode A, TreeNode B) {
+		if(B == null)
+			return false;
+		if(A == null)
+			return false;
+		boolean result = false;
+		if(A.val == B.val)
+			result = compareTree(A, B);
+		if(!result)
+			result = isSubStructure(A.left, B);
+		if(!result)
+			result = isSubStructure(A.right, B);
+		return result;
+    }
+	
+	public static boolean compareTree(TreeNode A, TreeNode B) {
+		if(B == null)
+			return true;
+		if(A == null)
+			return false;
+		if(A.val == B.val)
+			return compareTree(A.left, B.left) && compareTree(A.right, B.right);
+		else
+			return false;
+	}
+```
 

@@ -908,3 +908,116 @@ $$
 - 链表为空：返回null
 - k等于0或k小于0：返回null
 - 链表长度小于k：返回null
+
+##### 核心代码
+
+``` java
+	public static ListNode getKthFromEnd(ListNode head, int k) {
+		if(head == null)
+			return null;
+		if(k <= 0)
+			return null;
+		ListNode fast = head;
+		ListNode slow = head;
+		int index = 1;
+		while(fast.next != null) {
+			fast = fast.next;
+			index++;
+			if(index > k)
+				slow = slow.next;
+		}
+		if(index < k)
+			return null;
+		return slow;
+    }
+```
+
+### 面试题23：链表中环的入口节点
+
+#### 题目
+
+如果一个链表中包含环，如何找出环的入口节点？例如，在如图3.8所示的链表中，环的入口节点是3。
+
+- 思路1
+  - 确定是否有环
+  - 统计环中的节点数n
+  - 确定入口节点
+
+##### 思路1
+
+- 确定是否有环：快（一次移动2）、慢（一次移动1）指针
+  - 快指针的下一步为空，无环
+  - 重合即有环
+- 统计环中的节点数n：上述慢指针走回自己的位置，即统计出环中的节点数n
+  - 实际中这一步是与上一步同时做的，所以返回0代表无环，返回大于0代表环中的节点数n
+
+- 确定入口节点：利用两个指针，使它们间隔n，行进速度相同（都是1）
+  - 当二者重合时，即是环的入口
+
+##### 特殊输入
+
+- 链表为空
+- 链表无环
+
+##### 核心代码
+
+```java
+	public static ListNode findRingEntry(ListNode head) {
+		int n = hasRing(head);
+		if(n == 0)
+			return null;
+		ListNode fast = head;
+		ListNode slow = head;
+		int index = 0;
+		while(true) {
+			fast = fast.next;
+			index++;
+			if(index > n)
+				slow = slow.next;
+			if(slow == fast)
+				return slow;
+		}
+	}
+	
+	public static int hasRing(ListNode head) {
+		if(head == null)
+			return 0;
+		ListNode fast = head;
+		ListNode slow = head;
+		while(fast.next.next != null) {
+			fast = fast.next.next;
+			slow = slow.next;
+			if(fast == slow) {
+				ListNode temp = slow;
+				int number = 0;
+				while(true) {
+					slow = slow.next;
+					number++;
+					if(slow == temp)
+						break;
+				}
+				return number;
+			}
+		}
+		return 0;
+	}
+```
+
+### 面试题24：反转链表
+
+### [题目](https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/)
+
+定义一个函数，输入一个链表的头节点，反转该链表并输出反转后链表的头节点。
+
+- 思路1
+
+##### 思路1
+
+##### 特殊输入
+
+##### 核心代码
+
+```java
+
+```
+

@@ -1182,3 +1182,62 @@ $$
 	}
 ```
 
+### 面试题27：二叉树的镜像
+
+#### [题目](https://leetcode-cn.com/problems/er-cha-shu-de-jing-xiang-lcof/)
+
+请完成一个函数，输入一个二叉树，该函数输出它的镜像。
+
+- 思路1：交换当前节点的左右子树（递归实现）
+
+##### 思路1
+
+- 递归参数：
+  - 树的当前节点
+- 边界条件：
+  - 当前节点的左右子树都为空
+- 前进段：
+  - 如果左子树不为空
+    - 递归交换左子树的左右子树
+  - 如果右子树不为空
+    - 递归交换右子树的左右子树
+- 返回段：
+  - 返回根节点（子树的根节点虽然返回，但无任何赋值操作）
+
+##### 特殊输入
+
+- 树为空
+- 树只有根节点
+- 树是歪脖子（或者退化为链表的树）
+
+##### 核心代码
+
+``` java
+	public static TreeNode mirrorTree(TreeNode root) {
+		if(root == null)
+			return null;
+		if(root.left != null || root.right != null) {
+			swap(root);
+			if(root.left != null)
+				mirrorTree(root.left);
+			if(root.right != null)
+				mirrorTree(root.right);
+		}
+		return root;
+    }
+```
+
+
+
+### 面试题28：对称的二叉树
+
+#### [题目](https://leetcode-cn.com/problems/dui-cheng-de-er-cha-shu-lcof/)
+
+- 思路1
+
+##### 思路1
+
+##### 特殊输入
+
+##### 核心代码
+

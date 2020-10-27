@@ -1233,11 +1233,52 @@ $$
 
 #### [题目](https://leetcode-cn.com/problems/dui-cheng-de-er-cha-shu-lcof/)
 
-- 思路1
+请实现一个函数，用来判断一棵二叉树是不是对称的。如果一棵二叉树和它的镜像一样，那么它是对称的。例如，在如图4.3所示的3棵二叉树中，第一棵二叉树是对称的，而另外两棵不是。
+
+- 思路1：根左右的前序遍历，和根右左的”前序遍历“对比（递归实现）
 
 ##### 思路1
 
+- 递归参数：
+  - 树的左、右子树
+- 边界条件：
+  - 左、右都为空：true
+  - 左、右之一为空（不都为空，基于上一条）：false
+  - 左、右值不相等：false
+- 前进段：
+  - 左、右值相等
+    - 递归对比左的left和右的right
+    - 以及左的right和右的left
+      - 这里的本质是根左右与根右左
+- 返回段：
+  - 返回左的left和右的right，和左的right和右的left的与
+
 ##### 特殊输入
 
+- 树为空
+- 树只有根节点（递归边界考虑，不用额外处理）
+- 树只有左子树（递归边界考虑，不用额外处理）
+
 ##### 核心代码
+
+```java
+	public static boolean isSymmetric(TreeNode root) {
+		if(root == null)
+			return true;
+		return isSymmetric(root.left, root.right);
+    }
+	
+	public static boolean isSymmetric(TreeNode A, TreeNode B) {
+		if(A == null && B == null)
+			return true;
+		if(A == null || B == null)
+			return false;
+		if(A.val == B.val)
+			return isSymmetric(A.left, B.right) && isSymmetric(A.right, B.left);
+		else
+			return false;
+    }
+```
+
+
 

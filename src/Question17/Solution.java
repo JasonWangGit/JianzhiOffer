@@ -30,6 +30,8 @@ public class Solution {
     }
 
 	public static void printBigNumbers(int n) {
+		if(n <= 0)
+			return;
 		char[] chars = new char[n];
 		recur(chars, n, 0);
 	}

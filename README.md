@@ -840,7 +840,7 @@ $$
 			p >>= 1;
 		}
 		return result;
-    }
+	}
 ```
 
 ### 面试题17：打印从1到最大的n位数
@@ -929,7 +929,7 @@ $$
 		if(index < k)
 			return null;
 		return slow;
-    }
+	}
 ```
 
 ### 面试题23：链表中环的入口节点
@@ -1047,7 +1047,7 @@ $$
 		}
 		current.next = last;
 		return current;
-    }
+	}
 ```
 
 ### 面试题25：合并两个排序的链表
@@ -1168,7 +1168,7 @@ $$
 		if(!result)
 			result = isSubStructure(A.right, B);
 		return result;
-    }
+	}
 	
 	public static boolean compareTree(TreeNode A, TreeNode B) {
 		if(B == null)
@@ -1224,7 +1224,7 @@ $$
 				mirrorTree(root.right);
 		}
 		return root;
-    }
+	}
 ```
 
 
@@ -1266,7 +1266,7 @@ $$
 		if(root == null)
 			return true;
 		return isSymmetric(root.left, root.right);
-    }
+	}
 	
 	public static boolean isSymmetric(TreeNode A, TreeNode B) {
 		if(A == null && B == null)
@@ -1277,7 +1277,7 @@ $$
 			return isSymmetric(A.left, B.right) && isSymmetric(A.right, B.left);
 		else
 			return false;
-    }
+	}
 ```
 
 

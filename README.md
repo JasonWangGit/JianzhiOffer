@@ -1056,17 +1056,56 @@ $$
 
 输入两个递增排序的链表，合并这两个链表并使新链表中的节点仍然是递增排序的。例如，输入图3.11中的链表1和链表2，则合并之后的升序链表如链表3所示。
 
-- 思路1
+- 思路1：取两个链表头的较小值作为头，递归取头的next
 
 ##### 思路1
 
+- 递归参数：
+  - 两个链表的头
+- 边界条件：
+  - 某个链表的头为空
+    - l1为空，返回l2
+    - l2为空，返回l1
+- 前进段：
+  - 取两个链表头的较小值作为当前头
+  - 当前头的next
+    - 如果l1的头的值较小
+      - 则l2 = l2.next
+    - 如果l2的头的值较小
+      - 则l1 = l1.next
+- 返回段：
+  - 返回当前头
+
 ##### 特殊输入
+
+- l1和（或）l2为空：不用加以特殊处理，因为下面代码中递归边界条件规避了相关情形
 
 ##### 核心代码
 
 ```java
-
+	public static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+		if(l1 == null)
+			return l2;
+		if(l2 == null)
+			return l1;
+		ListNode listNode = null;
+		if(l1.val <= l2.val) {
+			listNode = l1;
+			listNode.next = mergeTwoLists(l1.next, l2);
+		}
+		else {
+			listNode = l2;
+			listNode.next = mergeTwoLists(l1, l2.next);
+		}
+		return listNode;
+	}
 ```
 
 
+
+### 面试题26：树的子结构
+
+
+
+### [题目]()
 

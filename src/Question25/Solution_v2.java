@@ -1,7 +1,5 @@
 package Question25;
 
-import java.awt.List;
-
 // https://leetcode-cn.com/problems/he-bing-liang-ge-pai-xu-de-lian-biao-lcof/
 
 public class Solution_v2 {

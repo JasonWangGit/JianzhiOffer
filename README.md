@@ -1009,6 +1009,53 @@ $$
 
 定义一个函数，输入一个链表的头节点，反转该链表并输出反转后链表的头节点。
 
+- 思路1: 三个指针，分别指向last、current和next
+
+##### 思路1
+
+- 初始条件
+  - last指向null
+  - current指向head
+  - next指向head.next
+- 循环体内（next为空结束循环，结束后将current指向last）
+  - 反转
+    - current指向last
+  - 移动到下一节点
+    - last指向current
+    - current指向next
+    - next指向next.next
+
+##### 特殊输入
+
+- 链表为空
+- 链表只有一个头节点（不用额外考虑，下面代码while循环条件规避了这一问题）
+
+##### 核心代码
+
+```java
+	public static ListNode reverseList(ListNode head) {
+		if(head == null)
+			return null;
+		ListNode last = null;
+		ListNode current = head;
+		ListNode next = head.next;
+		while(next != null) {
+			current.next = last;
+			last = current;
+			current = next;
+			next = next.next;
+		}
+		current.next = last;
+		return current;
+    }
+```
+
+### 面试题25：合并两个排序的链表
+
+#### [题目](https://leetcode-cn.com/problems/he-bing-liang-ge-pai-xu-de-lian-biao-lcof/)
+
+输入两个递增排序的链表，合并这两个链表并使新链表中的节点仍然是递增排序的。例如，输入图3.11中的链表1和链表2，则合并之后的升序链表如链表3所示。
+
 - 思路1
 
 ##### 思路1
@@ -1020,4 +1067,6 @@ $$
 ```java
 
 ```
+
+
 

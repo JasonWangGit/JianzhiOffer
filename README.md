@@ -848,3 +848,49 @@ $$
 #### [题目](https://leetcode-cn.com/problems/da-yin-cong-1dao-zui-da-de-nwei-shu-lcof/)
 
 输入数字 n，按顺序打印出从 1 到最大的 n 位十进制数。比如输入 3，则打印出 1、2、3 一直到最大的 3 位数 999。
+
+- 思路1：计算出n位数最大值，然后从1开始循环输出（不适用于大数）
+- 思路2：对一个长度为n的字符数组，通过递归进行全排列（适用于大数，但大数递归层级过深）
+
+##### 思路2
+
+- 递归参数：
+  - 字符数组
+  - n值
+  - index：当前到达n位数的第几位（左起是第1位，最右是第n位）
+- 边界条件：
+  - index == n
+- 前进段：
+  - 对下一位进行全排列（0~9），index + 1
+- 返回段：
+  - 空返回，当index == n时打印
+    - 需要构造removeZeroPrinter的打印方法
+      - 打印方法需要考虑：不打印第一个数 0、不打印0后的空格
+
+##### 特殊输入
+
+- n等于0或小于0
+
+##### 核心代码
+
+```java
+	public static void recur(char[] chars, int n, int index) {
+		if(index == n) {
+			removeZeroPrinter(chars);
+			return;
+		}
+		for(int i = 0; i < 10; i++) {
+			chars[index] = (char) ('0' + i);
+			recur(chars, n, index + 1);
+		}
+	}
+```
+
+
+
+### 面试题22：链表中倒数第k个节点
+
+#### [题目](https://leetcode-cn.com/problems/lian-biao-zhong-dao-shu-di-kge-jie-dian-lcof/)
+
+输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，本题从1开始计数，即链表的尾节点是倒数第1个节点。例如，一个链表有6个节点，从头节点开始，它们的值依次是1、2、3、4、5、6。这个链表的倒数第3个节点是值为4的节点。
+

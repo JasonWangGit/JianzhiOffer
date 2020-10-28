@@ -1514,7 +1514,25 @@ class MinStack {
 ##### 核心代码
 
 ```java
-
+	public static int[] levelOrder(TreeNode root) {
+		if(root == null)
+			return new int[0];
+		ArrayList<Integer> arrayList = new ArrayList<>();
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.offer(root);
+		while(!queue.isEmpty()) {
+			TreeNode temp = queue.poll();
+			arrayList.add(temp.val);
+			if(temp.left != null)
+				queue.offer(temp.left);
+			if(temp.right != null)
+				queue.offer(temp.right);
+		}
+		int[] result = new int[arrayList.size()];
+		for(int i = 0; i < arrayList.size(); i++)
+			result[i] = arrayList.get(i);
+		return result;
+    }
 ```
 
 #### [题目二：分行从上到下打印二叉树](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-ii-lcof/)
@@ -1536,7 +1554,39 @@ class MinStack {
 ##### 核心代码
 
 ```java
-
+	public static List<List<Integer>> levelOrder(TreeNode root) {
+		if(root == null)
+			return new ArrayList<>();
+		ArrayList<Integer> arrayList = new ArrayList<>();
+		Queue<TreeNode> queue = new LinkedList<>();
+		List<List<Integer>> result = new ArrayList<>();
+		int currentLevel = 1;
+		int nextLevel = 0;
+		queue.offer(root);
+		while(!queue.isEmpty()) {
+			TreeNode temp = queue.poll();
+			arrayList.add(temp.val);
+			currentLevel--;
+			if(temp.left != null) {
+				queue.offer(temp.left);
+				nextLevel++;
+			}
+			if(temp.right != null) {
+				queue.offer(temp.right);
+				nextLevel++;
+			}
+			if(currentLevel == 0) {
+				currentLevel = nextLevel;
+				nextLevel = 0;
+				ArrayList<Integer> tempArrayList = new ArrayList<>();
+				for(int i : arrayList)
+					tempArrayList.add(i);
+				result.add(tempArrayList);
+				arrayList.clear();
+			}
+		}
+		return result;
+    }
 ```
 
 #### [题目三：之字形打印二叉树](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-iii-lcof/)
@@ -1560,7 +1610,52 @@ class MinStack {
 ##### 核心代码
 
 ```java
-
+	public static List<List<Integer>> levelOrder(TreeNode root) {
+		if(root == null)
+			return new ArrayList<>();
+		Stack<TreeNode> stackOdd = new Stack<>();
+		Stack<TreeNode> stackEven = new Stack<>();
+		ArrayList<Integer> arrayList = new ArrayList<>();
+		List<List<Integer>> result = new ArrayList<>();
+		boolean levelFlag = true;
+		stackOdd.push(root);
+		
+		while(!stackOdd.isEmpty() || !stackEven.isEmpty()) {
+			TreeNode temp;
+			if(levelFlag)
+				temp = stackOdd.pop();
+			else
+				temp = stackEven.pop();
+			arrayList.add(temp.val);
+			if(levelFlag) {
+				if(temp.left != null)
+					stackEven.push(temp.left);
+				if(temp.right != null)
+					stackEven.push(temp.right);
+			} else {
+				if(temp.right != null)
+					stackOdd.push(temp.right);
+				if(temp.left != null)
+					stackOdd.push(temp.left);
+			}
+			if(stackOdd.isEmpty() && levelFlag) {
+				levelFlag = false;
+				addToResult(result, arrayList);
+			} else if(stackEven.isEmpty() && !levelFlag) {
+				levelFlag = true;
+				addToResult(result, arrayList);
+			}
+		}
+		return result;
+    }
+	
+	public static void addToResult(List<List<Integer>> result, List<Integer> arrayList) {
+		ArrayList<Integer> tempArrayList = new ArrayList<>();
+		for(int i : arrayList)
+			tempArrayList.add(i);
+		result.add(tempArrayList);
+		arrayList.clear();
+	}
 ```
 
 ### 

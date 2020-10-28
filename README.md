@@ -1332,7 +1332,7 @@ $$
 		while(matrix[0].length > 2 * start && matrix.length > 2 * start)
 			index = printer(result, matrix, start++, colEnd--, rowEnd--, index);
 		return result;
-    }
+	}
 	
 	public static int printer(int[] result, int[][] matrix, 
 			int start, int colEnd, int rowEnd, int index) {
@@ -1496,7 +1496,7 @@ class MinStack {
 					else
 						return false;
 		}
-    }
+	}
 ```
 
 ### 面试题32：从上到下打印二叉树
@@ -1532,7 +1532,7 @@ class MinStack {
 		for(int i = 0; i < arrayList.size(); i++)
 			result[i] = arrayList.get(i);
 		return result;
-    }
+	}
 ```
 
 #### [题目二：分行从上到下打印二叉树](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-ii-lcof/)
@@ -1586,7 +1586,7 @@ class MinStack {
 			}
 		}
 		return result;
-    }
+	}
 ```
 
 #### [题目三：之字形打印二叉树](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-iii-lcof/)
@@ -1647,7 +1647,7 @@ class MinStack {
 			}
 		}
 		return result;
-    }
+	}
 	
 	public static void addToResult(List<List<Integer>> result, List<Integer> arrayList) {
 		ArrayList<Integer> tempArrayList = new ArrayList<>();

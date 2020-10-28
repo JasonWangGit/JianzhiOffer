@@ -1,7 +1,5 @@
 package Question23;
 
-import java.awt.List;
-
 public class Solution {
 	// main() just for test, if you wanna submit on leetcode, reference to the
 	// function() beneath main()

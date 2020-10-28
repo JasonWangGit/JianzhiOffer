@@ -1280,5 +1280,77 @@ $$
 	}
 ```
 
+### 面试题29：顺时针打印矩阵
+
+#### [题目](https://leetcode-cn.com/problems/shun-shi-zhen-da-yin-ju-zhen-lcof/)
+
+输入一个矩阵，按照从外向里以顺时针的顺序依次打印出每一个数字。
+
+- 思路1：每次都从(start, start)位置开始，分向右、向下、向左、向上四步考虑（循环实现）
+
+#### 思路1
+
+- 参数
+  - start：当前起始位置
+  - rowEnd、colEnd：当前行、列的最后一个下标
+
+- 初始条件
+  - start为0
+  - rowEnd、colEnd为长度-1
+- 循环体内（矩阵宽度、长度都大于2 * start）
+  - printer函数
+    - 向右条件：colEnd大于start
+      - 行打印：从start打印到colEnd
+    - 向下条件：rowEnd大于start
+      - 列打印：从start + 1打印到rowEnd
+    - 向左条件：rowEnd大于start，且colEnd大于start
+      - 行打印：从colEnd - 1打印到start
+    - 向上条件：rowEnd大于start + 1，且colEnd大于start
+      - 列打印：从rowEnd - 1打印到start + 1
+  - start + 1
+  - rowEnd、colEnd - 1
+
+#### 特殊输入
+
+- 矩阵为空
+- 矩阵长度为0
+- 矩阵只有1个数、1行、1列
+
+#### 核心代码
+
+```java
+	public static int[] spiralOrder(int[][] matrix) {
+		if(matrix == null)
+			return null;
+		if(matrix.length == 0 || matrix[0].length == 0)
+			return new int[0];
+		int colEnd = matrix[0].length;
+		int rowEnd = matrix.length;
+		int[] result = new int[colEnd-- * rowEnd--];
+		int start = 0;
+		int index = 0;
+		while(matrix[0].length > 2 * start && matrix.length > 2 * start)
+			index = printer(result, matrix, start++, colEnd--, rowEnd--, index);
+		return result;
+    }
+	
+	public static int printer(int[] result, int[][] matrix, 
+			int start, int colEnd, int rowEnd, int index) {
+		if(colEnd >= start)
+			for(int i = start; i <= colEnd; i++)
+				result[index++] = matrix[start][i];
+		if(rowEnd > start)
+			for(int i = start + 1; i <= rowEnd; i++)
+				result[index++] = matrix[i][colEnd];
+		if(colEnd > start && rowEnd > start)
+			for(int i = colEnd - 1; i >= start; i--)
+				result[index++] = matrix[rowEnd][i];
+		if(colEnd > start && rowEnd > start + 1)
+			for(int i = rowEnd - 1; i > start; i--)
+				result[index++] = matrix[i][start];
+		return index;
+	}
+```
+
 
 

@@ -1,7 +1,5 @@
 package Question30;
 
-import java.util.Stack;
-
 //https://leetcode-cn.com/problems/bao-han-minhan-shu-de-zhan-lcof/
 
 public class Main {

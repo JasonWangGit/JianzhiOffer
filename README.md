@@ -1358,9 +1358,27 @@ $$
 
 定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的 min 函数。在该栈中，调用 min、push 及 pop 的时间复杂度都是 O(1)。
 
-- 思路1
+- 思路1：利用辅助栈来保存当前的最小值
 
 ##### 思路1
+
+- 压入：
+  - 如果主栈为空
+    - 将当前值压入主栈和辅助栈
+  - 如果主栈不为空
+    - 将当前值压入主栈
+    - 判断主栈栈顶元素与当前值的大小关系
+      - 当前值小于主栈栈顶元素
+        - 将当前值压入辅助栈
+      - 当前值大于等于主栈栈顶元素
+        - 将辅助栈栈顶元素压入辅助栈
+- 弹出：
+  - 弹出主栈
+  - 弹出辅助栈
+- top()：
+  - 返回主栈栈顶元素
+- min()：
+  - 返回辅助栈栈顶元素
 
 ##### 特殊输入
 
@@ -1418,6 +1436,75 @@ class MinStack {
 
 #### [题目](https://leetcode-cn.com/problems/zhan-de-ya-ru-dan-chu-xu-lie-lcof/)
 
+- 思路1：构建一个栈来模拟压入弹出操作（循环实现）
+
+##### 思路1
+
+- 参数
+  - pushed、poped数组的下标
+
+- 初始条件
+  - indexPushed、indexPoped都为0
+- 循环体内（死循环）
+  - 如果栈为空
+    - 将pushed的当前元素压入栈，并指向下一个元素
+  - 如果栈不为空
+    - 如果poped的当前元素等于栈顶元素
+      - 弹出栈，并将poped指向下一个元素
+      - 如果poped指向了最后一个元素的下一个
+        - 返回true
+    - 如果poped的当前元素不等于栈顶元素
+      - 如果pushed没有指向最后一个元素的下一个
+        - 将pushed的当前元素压入栈
+      - 如果pushed指向最后一个元素的下一个
+        - 返回false
+
+##### 特殊输入
+
+- pushed和poped同时为空：ture
+- pushed或poped为空：false
+- pushed和poped的长度同时为0：ture
+- pushed或poped的长度为0：false
+
+##### 核心代码
+
+```java
+	public static boolean validateStackSequences(int[] pushed, int[] popped) {
+		if(pushed == null && popped == null)
+			return true;
+		if(pushed == null || popped == null)
+			return false;
+		if(pushed.length == 0 && popped.length == 0)
+			return true;
+		if(pushed.length == 0 || popped.length == 0)
+			return false;
+		Stack<Integer> stack = new Stack<>();
+		int indexPushed = 0;
+		int indexPoped = 0;
+		while(true) {
+			if(stack.isEmpty()) 
+				stack.push(pushed[indexPushed++]);
+			else
+				if(popped[indexPoped] == stack.peek()) {
+					popped[indexPoped++] = stack.pop();
+					if(indexPoped == popped.length)
+						return true;
+				}
+				else
+					if(indexPushed < pushed.length)
+						stack.push(pushed[indexPushed++]);
+					else
+						return false;
+		}
+    }
+```
+
+### 面试题32：从上到下打印二叉树
+
+#### [题目一：不分行从上到下打印二叉树](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-lcof/)
+
+从上到下打印出二叉树的每个节点，同一层的节点按照从左到右的顺序打印。例如，输入图4.6中的二叉树，则依次打印出8, 6, 10, 5, 7, 9, 11。
+
 - 思路1
 
 ##### 思路1
@@ -1430,3 +1517,50 @@ class MinStack {
 
 ```
 
+#### [题目二：分行从上到下打印二叉树](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-ii-lcof/)
+
+从上到下按层打印二叉树，同一层的节点按从左到右的顺序打印，每一层打印到一行。例如打印图4.7中的二叉树结果为：
+
+8
+
+6	10
+
+5	7	9	11
+
+- 思路1
+
+##### 思路1
+
+##### 特殊输入
+
+##### 核心代码
+
+```java
+
+```
+
+#### [题目三：之字形打印二叉树](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-iii-lcof/)
+
+请实现一个函数按照之字形顺序打印二叉树，即第一行按照从左到右的顺序打印，第二层按照从右到左的顺序打印，第三行再按照从左到右的顺序打印，其他行以此类推。例如，按之字形顺序打印图4.8中二叉树的结果为：
+
+1
+
+3	2
+
+4	5	6	7
+
+15	14	13	12	11	10	9	8
+
+- 思路1
+
+##### 思路1
+
+##### 特殊输入
+
+##### 核心代码
+
+```java
+
+```
+
+### 

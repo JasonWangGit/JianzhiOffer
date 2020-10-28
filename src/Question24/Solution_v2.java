@@ -1,7 +1,5 @@
 package Question24;
 
-import java.awt.List;
-
 // https://leetcode-cn.com/problems/fan-zhuan-lian-biao-lcof/
 
 public class Solution_v2 {

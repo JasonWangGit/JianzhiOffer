@@ -1352,5 +1352,81 @@ $$
 	}
 ```
 
+### 面试题30：包含min函数的栈
 
+#### [题目](https://leetcode-cn.com/problems/bao-han-minhan-shu-de-zhan-lcof/)
+
+定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的 min 函数。在该栈中，调用 min、push 及 pop 的时间复杂度都是 O(1)。
+
+- 思路1
+
+##### 思路1
+
+##### 特殊输入
+
+- 未push情况下直接pop、top、min（**应该考虑异常处理**）
+
+##### 核心代码
+
+```java
+class MinStack {
+	private Stack<Integer> stack;
+	private Stack<Integer> minStack;
+	
+    /** initialize your data structure here. */
+    public MinStack() {
+    	stack = new Stack<>();
+    	minStack = new Stack<>();
+    }
+    
+    public void push(int x) {
+    	if(stack.isEmpty()) {
+    		stack.push(x);
+    		minStack.push(x);
+    	} else {
+    		stack.push(x);
+    		if(x < minStack.peek())
+    			minStack.push(x);
+    		else
+    			minStack.push(minStack.peek());
+    	}
+    	
+    }
+    
+    public void pop() {
+    	if(stack.isEmpty())
+    		return;
+    	stack.pop();
+    	minStack.pop();
+    }
+    
+    public int top() {
+    	if(stack.isEmpty())
+    		return -1;
+    	return stack.peek();
+    }
+    
+    public int min() {
+    	if(stack.isEmpty())
+    		return -1;
+    	return minStack.peek();
+    }
+}
+```
+
+### 面试题31：栈的压入、弹出序列
+
+#### [题目](https://leetcode-cn.com/problems/zhan-de-ya-ru-dan-chu-xu-lie-lcof/)
+
+- 思路1
+
+##### 思路1
+
+##### 特殊输入
+
+##### 核心代码
+
+```java
+
+```
 

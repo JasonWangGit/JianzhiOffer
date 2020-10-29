@@ -25,7 +25,7 @@ public class Part3 {
 		}
 	}
 	
-	public static List<List<Integer>> levelOrder(TreeNode root) {
+	public static List<List<Integer>> levelOrder2(TreeNode root) {
 		if(root == null)
 			return new ArrayList<>();
 		Stack<TreeNode> stackOdd = new Stack<>();
@@ -59,6 +59,45 @@ public class Part3 {
 			} else if(stackEven.isEmpty() && !levelFlag) {
 				levelFlag = true;
 				addToResult(result, arrayList);
+			}
+		}
+		return result;
+    }
+	
+	public static List<List<Integer>> levelOrder(TreeNode root) {
+		if(root == null)
+			return new ArrayList<>();
+		Stack<TreeNode> stackOdd = new Stack<>();
+		Stack<TreeNode> stackEven = new Stack<>();
+		ArrayList<Integer> arrayList = new ArrayList<>();
+		List<List<Integer>> result = new ArrayList<>();
+		boolean levelFlag = true;
+		stackOdd.push(root);
+		
+		while(!stackOdd.isEmpty() || !stackEven.isEmpty()) {
+			TreeNode temp;
+			if(levelFlag) {
+				temp = stackOdd.pop();
+				arrayList.add(temp.val);
+				if(temp.left != null)
+					stackEven.push(temp.left);
+				if(temp.right != null)
+					stackEven.push(temp.right);
+				if(stackOdd.isEmpty()) {
+					levelFlag = false;
+					addToResult(result, arrayList);
+				} 
+			} else {
+				temp = stackEven.pop();
+				arrayList.add(temp.val);
+				if(temp.right != null)
+					stackOdd.push(temp.right);
+				if(temp.left != null)
+					stackOdd.push(temp.left);
+				if(stackEven.isEmpty()) {
+					levelFlag = true;
+					addToResult(result, arrayList);
+				}
 			}
 		}
 		return result;

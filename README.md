@@ -1,3 +1,13 @@
+### 知识点
+
+#### 递归
+
+三要素：当边界条件不满足时，递归前进；当边界条件满足时，递归返回（**还要注意递归的参数**）
+
+- 边界条件：控制递归的结束
+- 递归前进段
+- 递归返回段
+
 ### 面试题3：数组中重复的数字
 
 #### [题目一：找出数组中重复的数字](https://leetcode-cn.com/problems/shu-zu-zhong-zhong-fu-de-shu-zi-lcof)
@@ -1745,6 +1755,7 @@ class MinStack {
     - 初值：`middle = end;` `middleFlag = true;`
     - 把第一个值大于根的位置记为middle，同时把middleFlag设为false
     - 在middle后的元素中，如果有元素小于根：返回false
+  - 递归左、右子树
 - 返回段（**这里可优化，参考181页**）：
   - 如果middle == end
     - 返回左子树
@@ -1805,21 +1816,72 @@ class MinStack {
 
 输入一棵二叉树和一个整数，打印出二叉树中节点值的和为输入整数的所有路径。从树的根节点开始往下一直到叶节点所经过的节点形成一条路径。
 
-- 思路1：
+- 思路1：利用辅助栈（双端队列实现，便于返回路径）遍历二叉树（递归实现）
 
 ##### 思路1
 
+- 递归参数：
+  - 当前根节点
+  - 辅助栈（双端队列）
+  - 保存结果的List<List\<Integer>>
+  - 目标值
+  - 当前值
+- 边界条件：
+  - 当前值等于目标值，且当前根节点无左右子树：将当前路径（双端队列）添加到结果中
+- 前进段：
+  - 当前根节点的值入栈，当前值加1
+  - 如果左子树不为空
+    - 递归计算左子树
+  - 如果右子树不为空
+    - 递归计算右子树
+  - 出栈，当前值减1
+- 返回段：
+  - 无返回
+
 ##### 特殊输入
+
+- 树为空
+- 树只有根节点
 
 ##### 核心代码
 
 ```java
-
+	public static List<List<Integer>> pathSum(TreeNode root, int sum) {
+		if(root == null)
+			return new ArrayList<>();
+		List<List<Integer>> result = new ArrayList<>();
+		Deque<Integer> deque = new LinkedList<>();
+		recur(root, deque, result, sum, 0);
+		return result;
+    }
+	
+	public static void recur(TreeNode root, Deque<Integer> deque, List<List<Integer>> result, 
+			int targerVal, int currentVal) {
+		deque.push(root.val);
+		currentVal += deque.peek();
+		if(currentVal == targerVal && root.left == null && root.right == null) {
+			Iterator<Integer> iterator = deque.descendingIterator();
+			ArrayList<Integer> arrayList = new ArrayList<>();
+			while(iterator.hasNext())
+				arrayList.add(iterator.next());
+			result.add(arrayList);
+		}
+		if(root.left != null)
+			recur(root.left, deque, result, targerVal, currentVal);
+		if(root.right != null)
+			recur(root.right, deque, result, targerVal, currentVal);
+		currentVal -= deque.peek();
+		deque.pop();
+	}
 ```
 
 ### 面试题35：复杂链表的复制
 
 #### [题目](https://leetcode-cn.com/problems/fu-za-lian-biao-de-fu-zhi-lcof/)
+
+请实现 copyRandomList* Clone(ComplexListNode* pHead) 函数，复制一个复杂链表。在复杂链表中，每个节点除了有一个 next 指针指向下一个节点，还有一个 m_pSibling指针指向链表中的任意节点或者 null。
+
+
 
 - 思路1：
 

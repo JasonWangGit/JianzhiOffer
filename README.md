@@ -1505,11 +1505,24 @@ class MinStack {
 
 从上到下打印出二叉树的每个节点，同一层的节点按照从左到右的顺序打印。例如，输入图4.6中的二叉树，则依次打印出8, 6, 10, 5, 7, 9, 11。
 
-- 思路1
+- 思路1：利用队列，先进先出（循环实现）
 
 ##### 思路1
 
+- 初始条件
+  - root入队
+- 循环体内（队列不为空）
+  - 出队并存入数组
+  - 如果当前节点有左子树
+    - 左子树入队
+  - 如果当前节点有右子树
+    - 右子树入队
+
 ##### 特殊输入
+
+- 树为空
+- 树只有根节点
+- 树是歪脖子（或者退化为链表的树）
 
 ##### 核心代码
 
@@ -1545,11 +1558,32 @@ class MinStack {
 
 5	7	9	11
 
-- 思路1
+- 思路1：利用队列，先进先出（循环实现）
+  - 增加两个变量currentLevel和nextLevel来统计当前层的节点数和下一层的节点数来控制换行
 
 ##### 思路1
 
+- 参数
+  - currentLevel和nextLevel
+- 初始条件
+  - currentLevel为1（因为根节点算1个）
+  - nextLevel
+- 循环体内（死循环）
+  - 出队并存入数组，currentLevel--
+  - 如果当前节点有左子树
+    - 左子树入队，nextLevel++
+  - 如果当前节点有右子树
+    - 右子树入队，nextLevel++
+  - 如果currentLevel为0
+    - 换行：实际操作为将目前临时ArrayList添加到结果中，并清空ArrayList
+      - 注意拷贝方式
+    - currentLevel = nextLevel，nextLevel = 0
+
 ##### 特殊输入
+
+- 树为空
+- 树只有根节点
+- 树是歪脖子（或者退化为链表的树）
 
 ##### 核心代码
 
@@ -1601,11 +1635,38 @@ class MinStack {
 
 15	14	13	12	11	10	9	8
 
-- 思路1
+- 思路1：利用栈，后进先出（循环实现）
+  - 但要利用两个栈，而不是一个栈：分奇数层栈oddStack、偶数层栈evenStack
 
 ##### 思路1
 
+- 参数
+  - levelFlag：奇偶层标志，根为奇数层，奇数：true，偶数：false
+- 初始条件
+  - levelFlag为true
+- 循环体内（死循环）
+  - 如果是奇数层（levelFlag为true）
+    - oddStack出栈，并存入数组
+    - 如果当前节点有左子树
+      - evenStack入栈
+    - 如果当前节点有右子树
+      - evenStack入栈
+    - 如果oddStack为空，levelFlag设为false，并换行：实际操作为将目前临时ArrayList添加到结果中，并清空ArrayList
+      - 注意拷贝方式
+  - 如果是偶数层（levelFlag为false）
+    - evenStack出栈，并存入数组
+    - 如果当前节点有左子树
+      - oddStack入栈
+    - 如果当前节点有右子树
+      - oddStack入栈
+    - 如果evenStack为空，levelFlag设为true，并换行：实际操作为将目前临时ArrayList添加到结果中，并清空ArrayList
+      - 注意拷贝方式
+
 ##### 特殊输入
+
+- 树为空
+- 树只有根节点
+- 树是歪脖子（或者退化为链表的树）
 
 ##### 核心代码
 
@@ -1622,32 +1683,32 @@ class MinStack {
 		
 		while(!stackOdd.isEmpty() || !stackEven.isEmpty()) {
 			TreeNode temp;
-			if(levelFlag)
-				temp = stackOdd.pop();
-			else
-				temp = stackEven.pop();
-			arrayList.add(temp.val);
 			if(levelFlag) {
+				temp = stackOdd.pop();
+				arrayList.add(temp.val);
 				if(temp.left != null)
 					stackEven.push(temp.left);
 				if(temp.right != null)
 					stackEven.push(temp.right);
+				if(stackOdd.isEmpty()) {
+					levelFlag = false;
+					addToResult(result, arrayList);
+				} 
 			} else {
+				temp = stackEven.pop();
+				arrayList.add(temp.val);
 				if(temp.right != null)
 					stackOdd.push(temp.right);
 				if(temp.left != null)
 					stackOdd.push(temp.left);
-			}
-			if(stackOdd.isEmpty() && levelFlag) {
-				levelFlag = false;
-				addToResult(result, arrayList);
-			} else if(stackEven.isEmpty() && !levelFlag) {
-				levelFlag = true;
-				addToResult(result, arrayList);
+				if(stackEven.isEmpty()) {
+					levelFlag = true;
+					addToResult(result, arrayList);
+				}
 			}
 		}
 		return result;
-	}
+    }
 	
 	public static void addToResult(List<List<Integer>> result, List<Integer> arrayList) {
 		ArrayList<Integer> tempArrayList = new ArrayList<>();
@@ -1658,4 +1719,75 @@ class MinStack {
 	}
 ```
 
-### 
+### 面试题33：二叉搜索树的后序遍历序列
+
+#### [题目]()
+
+- 思路1：
+
+##### 思路1
+
+##### 特殊输入
+
+##### 核心代码
+
+```java
+
+```
+
+### 面试题34：二叉树中和为某一值的路径
+
+#### [题目]()
+
+- 思路1：
+
+##### 思路1
+
+##### 特殊输入
+
+##### 核心代码
+
+```java
+
+```
+
+### 面试题35：复杂链表的复制
+
+#### [题目]()
+
+- 思路1：
+
+##### 思路1
+
+##### 特殊输入
+
+##### 核心代码
+
+```java
+
+```
+
+### 面试题36：二叉搜索树与双向链表
+
+#### [题目]()
+
+- 思路1：
+
+##### 思路1
+
+##### 特殊输入
+
+##### 核心代码
+
+```java
+
+```
+
+
+
+
+
+
+
+
+

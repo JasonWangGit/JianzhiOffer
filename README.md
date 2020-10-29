@@ -1723,23 +1723,87 @@ class MinStack {
 
 ### 面试题33：二叉搜索树的后序遍历序列
 
-#### [题目]()
+#### [题目](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-de-hou-xu-bian-li-xu-lie-lcof/)
 
-- 思路1：
+输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历结果。如果是则返回 true，否则返回 false。假设输入的数组的任意两个数字都互不相同。例如，输入数组{5, 7, 6, 9, 10, 8}，则返回true，因为这个整数序列是图4.9二叉搜索树的后序遍历结果，如果输入的数组是{7, 4, 6, 5}，则由于没有哪棵二叉搜索树的后序遍历结果是这个序列，因此返回false。
+
+- 思路1：遍历数组，确定右子树范围（递归实现）
+  - 如果右子树中存在比根小的，则返回false
+  - 如果没有，递归左右子树
 
 ##### 思路1
 
+- 递归参数：
+  - 后序遍历数组
+  - 当前子树起始位置start
+  - 当前子树结束位置end
+- 边界条件：
+  - start == end
+    - 代表当前子树只有根，返回true
+- 前进段：
+  - 先遍历当前数组（循环实现）
+    - 初值：`middle = end;` `middleFlag = true;`
+    - 把第一个值大于根的位置记为middle，同时把middleFlag设为false
+    - 在middle后的元素中，如果有元素小于根：返回false
+- 返回段（**这里可优化，参考181页**）：
+  - 如果middle == end
+    - 返回左子树
+  - 如果middle == start
+    - 返回右子树
+  - 其他情况
+    - 返回左右子树的与
+
 ##### 特殊输入
+
+- 数组为空
+- 数组长度为0
+- 子树某部分只有左子树或只有右子树（歪脖子）
+  - 测试用例：`int[] postorder = {1, 2, 5, 10, 6, 9, 4, 3};`
 
 ##### 核心代码
 
 ```java
-
+	public static boolean verifyPostorder(int[] postorder) {
+		if(postorder == null)
+			return false;
+		if(postorder.length == 0)
+			return true;
+		return recur(postorder, 0, postorder.length - 1);
+    }
+	
+	public static boolean recur(int [] postorder, int start, int end) {
+		if(start == end)
+			return true;
+		int middle = end;
+		boolean middleFlag = true;
+		for(int i = start; i <= end; i++) {
+			if(postorder[i] > postorder[end] && middleFlag) {
+				middleFlag = false;
+				middle = i;
+			}
+			if(i < middle)
+				if(postorder[i] > postorder[end])
+					return false;
+				else
+					continue;
+			else
+				if(postorder[i] < postorder[end])
+					return false;
+		}
+		if(middle == end)
+			return recur(postorder, start, middle - 1);
+		else if(middle == start)
+			return recur(postorder, middle, end - 1);
+		else
+			return recur(postorder, start, middle - 1) && recur(postorder, middle, end - 1);
+	}
 ```
 
 ### 面试题34：二叉树中和为某一值的路径
 
-#### [题目]()
+#### [题目](https://leetcode-cn.com/problems/er-cha-shu-zhong-he-wei-mou-yi-zhi-de-lu-jing-lcof/)
+
+输入一棵二叉树和一个整数，打印出二叉树中节点值的和为输入整数的所有路径。从树的根节点开始往下一直到叶节点所经过的节点形成一条路径。
 
 - 思路1：
 
@@ -1755,7 +1819,7 @@ class MinStack {
 
 ### 面试题35：复杂链表的复制
 
-#### [题目]()
+#### [题目](https://leetcode-cn.com/problems/fu-za-lian-biao-de-fu-zhi-lcof/)
 
 - 思路1：
 
@@ -1771,7 +1835,7 @@ class MinStack {
 
 ### 面试题36：二叉搜索树与双向链表
 
-#### [题目]()
+#### [题目](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-yu-shuang-xiang-lian-biao-lcof/)
 
 - 思路1：
 

@@ -1637,6 +1637,8 @@ class MinStack {
 
 - 思路1：利用栈，后进先出（循环实现）
   - 但要利用两个栈，而不是一个栈：分奇数层栈oddStack、偶数层栈evenStack
+    - 奇数层先左后右
+    - 偶数层先右后左
 
 ##### 思路1
 
@@ -1655,9 +1657,9 @@ class MinStack {
       - 注意拷贝方式
   - 如果是偶数层（levelFlag为false）
     - evenStack出栈，并存入数组
-    - 如果当前节点有左子树
-      - oddStack入栈
     - 如果当前节点有右子树
+      - oddStack入栈
+    - 如果当前节点有左子树
       - oddStack入栈
     - 如果evenStack为空，levelFlag设为true，并换行：实际操作为将目前临时ArrayList添加到结果中，并清空ArrayList
       - 注意拷贝方式

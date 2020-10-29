@@ -1881,23 +1881,99 @@ class MinStack {
 
 请实现 copyRandomList* Clone(ComplexListNode* pHead) 函数，复制一个复杂链表。在复杂链表中，每个节点除了有一个 next 指针指向下一个节点，还有一个 m_pSibling指针指向链表中的任意节点或者 null。
 
+- 思路1：两层遍历，外层遍历节点，内层遍历寻找random
+  - 时间复杂度O(n^2)
+- 思路2：一层遍历，利用哈希表找复制前和复制后节点对应关系以寻找random
+  - 时间复杂度O(n)
+  - 空间复杂度O(n)
+- 思路3：一层遍历，分三步实现节点的复制（分治）
 
+##### 思路3
 
-- 思路1：
-
-##### 思路1
+- 第一步，将复制后的节点放在原链表对应节点的后面
+  - 新建一个节点（深拷贝问题），将它指向当前节点的下一个节点
+  - 让当前节点指向新建的节点
+  - 当前节点后移
+  - **注意**：在`Node current = head;`中，current是head的引用（指针，更容易理解）
+    - 所以`current = current.next;`操作并不会影响head（指针移动）
+    - 而`current.next = nodeCopy;`操作会影响head（改变指针所指位置的值）
+- 第二步，将原链表中每个节点后面节点的random指向这个节点的random的后面节点
+  - next节点指向当前节点的下一个节点
+  - 如果当前节点的random指针不为空
+    - next的random指向当前节点的random的下一个节点
+  - 当前节点指向next的下一个节点
+- 第三步，将原链表拆分：奇数节点成为原链表，偶数节点成为复制链表
+  - 处理链表头节点
+    - current指向头节点
+    - headCopy指向头节点的下一个节点
+    - currentCopy指向headCopy
+    - current.next指向currentCopy.next
+    - current后移
+  - 循环处理所有剩余节点（current不为空）
+    - currentCopy.next指向current.next
+    - currentCopy后移
+    - current.next指向currentCopy.next
+    - current后移
+    - 返回headCopy
 
 ##### 特殊输入
+
+- 链表为空
+- 链表只有头节点
 
 ##### 核心代码
 
 ```java
-
+	public static Node copyRandomList(Node head) {
+		if(head == null)
+			return null;
+		copyAndMerge(head);
+		addRandom(head);
+        return split(head);
+    }
+	
+	public static void copyAndMerge(Node head) {
+		Node current = head;
+		while(current != null) {
+			Node nodeCopy = new Node(current.val);
+			nodeCopy.next = current.next;
+			nodeCopy.random = null;
+			current.next = nodeCopy;
+			current = nodeCopy.next;
+		}
+	}
+	
+	public static void addRandom(Node head) {
+		Node current = head;
+		while(current != null) {
+			Node next = current.next;
+			if(current.random != null)
+				next.random = current.random.next;
+			current = next.next;
+		}
+	}
+	
+	public static Node split(Node head) {
+		Node current = head;
+		Node headCopy = current.next;
+		Node currentCopy = headCopy;
+		current.next = currentCopy.next;
+		current = current.next;
+		while(current != null) {
+			currentCopy.next = current.next;
+			currentCopy = currentCopy.next;
+			current.next = currentCopy.next;
+			current = current.next;
+		}
+		return headCopy;
+	}
 ```
 
 ### 面试题36：二叉搜索树与双向链表
 
 #### [题目](https://leetcode-cn.com/problems/er-cha-sou-suo-shu-yu-shuang-xiang-lian-biao-lcof/)
+
+输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的循环双向链表。要求不能创建任何新的节点，只能调整树中节点指针的指向。比如，输入图4.15中左边的二叉搜索树，则输出转换之后的排序双向链表。
 
 - 思路1：
 

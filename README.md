@@ -1975,6 +1975,72 @@ class MinStack {
 
 输入一棵二叉搜索树，将该二叉搜索树转换成一个排序的循环双向链表。要求不能创建任何新的节点，只能调整树中节点指针的指向。比如，输入图4.15中左边的二叉搜索树，则输出转换之后的排序双向链表。
 
+- 思路1：中序遍历（递归实现）
+  - 考虑最左叶子与根的关系，及该根与其右叶子的关系：这三者可以转化成一个双向链表
+  - 其他节点之间的关系均可抽象成某节点与左“叶子”、右“叶子”的关系
+
+##### 思路1
+
+- 递归参数：
+  - 当前根节点
+  - 上一个节点：中序遍历保证了节点值由小到大，所以上树中一个节点也是链表中上一个节点
+    - last初值为空
+- 边界条件：
+  - 当前值等于目标值，且当前根节点无左右子树：将当前路径（双端队列）添加到结果中
+- 前进段：
+  - 如果当前节点有左子树
+    - 递归调用左子树：返回last
+  - 当前节点的left等于last
+  - 如果last非空
+    - last的right等于当前节点
+  - last等于当前节点
+  - 如果当前节点有右子树
+    - 递归调用右子树：返回last
+- 返回段：
+  - 返回last
+
+##### 特殊输入
+
+- 树为空
+- 树只有根节点
+
+##### 核心代码
+
+```java
+	public static Node treeToDoublyList(Node root) {
+		if(root == null)
+			return null;
+		recur(root, null);
+		Node first = root;
+		while(first.left != null)
+			first = first.left;
+		Node last = root;
+		while(last.right != null)
+			last = last.right;
+		first.left = last;
+		last.right = first;
+        return first;
+    }
+	
+	public static Node recur(Node root, Node last) {
+		if(root.left != null)
+			last = recur(root.left, last);
+		root.left = last;
+		if(last != null)
+			last.right = root;
+		last = root;
+		if(root.right != null)
+			last = recur(root.right, last);
+		return last;
+	}
+```
+
+### 面试题37：序列化二叉树
+
+#### [题目](https://leetcode-cn.com/problems/xu-lie-hua-er-cha-shu-lcof/)
+
+请实现两个函数，分别用来序列化和反序列化二叉树。
+
 - 思路1：
 
 ##### 思路1
@@ -1986,6 +2052,76 @@ class MinStack {
 ```java
 
 ```
+
+### 面试题38：字符串的排列
+
+#### [题目](https://leetcode-cn.com/problems/zi-fu-chuan-de-pai-lie-lcof/)
+
+输入一个字符串，打印出该字符串中字符的所有排列。例如，输出字符串abc，则打印出由字符a、b、c所能排列出来的所有字符串abc、acb、bac、bca、cab和cba。
+
+- 思路1：
+
+##### 思路1
+
+##### 特殊输入
+
+##### 核心代码
+
+```java
+
+```
+
+### 面试题39：数组中出现次数超过一半的数字
+
+#### [题目](https://leetcode-cn.com/problems/shu-zu-zhong-chu-xian-ci-shu-chao-guo-yi-ban-de-shu-zi-lcof/)
+
+数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。例如，输入一个长度为9的数组{1, 2, 3, 2, 2, 2, 5, 4, 2}。由于数字2在数组中出现了5次，超过数组长度的一半，因此输出2。
+
+- 思路1：
+
+##### 思路1
+
+##### 特殊输入
+
+##### 核心代码
+
+```java
+
+```
+
+### 面试40：最小的k个数
+
+#### [题目](https://leetcode-cn.com/problems/zui-xiao-de-kge-shu-lcof/)
+
+输入整数数组 n ，找出其中最小的 k个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。
+
+- 思路1：
+
+##### 思路1
+
+##### 特殊输入
+
+##### 核心代码
+
+```java
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

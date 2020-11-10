@@ -1334,7 +1334,7 @@ $$
   - rowEnd、colEnd为长度-1
 - 循环体内（矩阵宽度、长度都大于2 * start）
   - printer函数
-    - 向右条件：colEnd大于start
+    - 向右条件：colEnd大于等于start
       - 行打印：从start打印到colEnd
     - 向下条件：rowEnd大于start
       - 列打印：从start + 1打印到rowEnd
@@ -1817,12 +1817,7 @@ class MinStack {
 				middleFlag = false;
 				middle = i;
 			}
-			if(i < middle)
-				if(postorder[i] > postorder[end])
-					return false;
-				else
-					continue;
-			else
+			if(i > middle)
 				if(postorder[i] < postorder[end])
 					return false;
 		}

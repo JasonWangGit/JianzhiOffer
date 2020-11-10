@@ -607,8 +607,8 @@ $$
   - 当前访问到矩阵的位置：行、列
 - 边界条件：
   - 矩阵行、列越界：0
-    - 行小于0或大于等于length-1
-    - 列小于0或大于length-1
+    - 行小于0或大于等于length
+    - 列小于0或大于等于length
   - 矩阵当前列、列位置已被访问：0
   - 矩阵当前列、列位置是不可进入的：0
   - 矩阵当前列、列位置是可进入的：1
@@ -687,7 +687,7 @@ $$
 f(n) = max(f(i) * f(n - i))
 $$
 
-- 对长度为n的绳子，最大乘积是剪一刀与另一刀最大值 的所有情况的最大值 ，而另一刀的最大值可能是由若干刀的乘积组成的，所以需要将长度为i时候的最大值存储在一个数组已供使用
+- 对长度为n的绳子，最大乘积是剪一刀与另一刀最大值的所有情况的最大值 ，而另一刀的最大值可能是由若干刀的乘积组成的，所以需要将长度为i时候的最大值存储在一个数组已供使用
 - 根据这种规律从下往上计算，比如
   - f(4)有f(1)和f(3)、f(2)和f(2)两种情况，则取他们的最大值记录在一个数组里
     - 这里f(1)为1，f(2)为2，f(3)为3，这是因为已经剪过1刀了，注意和上面的不同
@@ -818,7 +818,7 @@ $$
 - 初始条件
   - n为0时
     - x为0：错误（异常）
-    - x不为0：return 0
+    - x不为0：return 1
   - n大于0
   - n小于0
     - `n = -n;`
@@ -893,6 +893,25 @@ $$
 			chars[index] = (char) ('0' + i);
 			recur(chars, n, index + 1);
 		}
+	}
+
+	public static void removeZeroPrinter(char[] chars) {
+		int index = 0;
+		boolean firstFlag = true;
+		while(true) {
+			if(index == chars.length) {
+				System.out.print("");
+				firstFlag = false;
+				break;
+			}
+			if(chars[index] != '0')
+				break;
+			index++;
+		}
+		while(index < chars.length)
+			System.out.print(chars[index++]);
+		if(firstFlag)
+			System.out.print(" ");
 	}
 ```
 
@@ -1139,7 +1158,7 @@ $$
       - 进入内层递归
     - 如果上述的结果为false
       - 进入A的左子树
-    - 如果上述的结果（包含第一条和第二条）为false
+    - 如果上述的结果为false
       - 进入右子树
   - 返回段：
     - 返回当前的result
@@ -1234,6 +1253,12 @@ $$
 				mirrorTree(root.right);
 		}
 		return root;
+	}
+
+	public static void swap(TreeNode root) {
+		TreeNode temp = root.left;
+		root.left = root.right;
+		root.right = temp;
 	}
 ```
 

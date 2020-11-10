@@ -1875,8 +1875,7 @@ class MinStack {
 		return result;
     }
 	
-	public static void recur(TreeNode root, Deque<Integer> deque, List<List<Integer>> result, 
-			int targerVal, int currentVal) {
+	public static void recur(TreeNode root, Deque<Integer> deque, List<List<Integer>> result, int targerVal, int currentVal) {
 		deque.push(root.val);
 		currentVal += deque.peek();
 		if(currentVal == targerVal && root.left == null && root.right == null) {
@@ -1890,7 +1889,7 @@ class MinStack {
 			recur(root.left, deque, result, targerVal, currentVal);
 		if(root.right != null)
 			recur(root.right, deque, result, targerVal, currentVal);
-		currentVal -= deque.peek();
+		currentVal -= deque.peek(); // 这行无意义
 		deque.pop();
 	}
 ```
@@ -1912,8 +1911,8 @@ class MinStack {
 
 - 第一步，将复制后的节点放在原链表对应节点的后面
   - 新建一个节点（深拷贝问题），将它指向当前节点的下一个节点
-  - 让当前节点指向新建的节点
-  - 当前节点后移
+  - 让当前节点的next指向新建的节点
+  - 当前指针后移
   - **注意**：在`Node current = head;`中，current是head的引用（指针，更容易理解）
     - 所以`current = current.next;`操作并不会影响head（指针移动）
     - 而`current.next = nodeCopy;`操作会影响head（改变指针所指位置的值）
@@ -1921,7 +1920,7 @@ class MinStack {
   - next节点指向当前节点的下一个节点
   - 如果当前节点的random指针不为空
     - next的random指向当前节点的random的下一个节点
-  - 当前节点指向next的下一个节点
+  - 当前指针指向next的下一个节点（后移）
 - 第三步，将原链表拆分：奇数节点成为原链表，偶数节点成为复制链表
   - 处理链表头节点
     - current指向头节点
@@ -1934,7 +1933,7 @@ class MinStack {
     - currentCopy后移
     - current.next指向currentCopy.next
     - current后移
-    - 返回headCopy
+  - 返回headCopy
 
 ##### 特殊输入
 

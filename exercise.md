@@ -359,38 +359,24 @@ public int cuttingRope(int n) {
 
 #### [题目](https://leetcode-cn.com/problems/er-jin-zhi-zhong-1de-ge-shu-lcof/)
 
-请实现一个函数，输入一个整数，输出该数二进制表示中 1 的个数。例如，把 9 表示成二进制是 1001，有 2 位是 1。因此，如果输入 9，则该函数输出 2。
-
-- 思路1：利用Java中的左边补零右移（>>>）
-- 思路2：利用n & n - 1：将n最右边的1变成0
-
-##### 特殊输入
-
-- n等于0
-
-- n小于0
-
-##### 核心代码
-
 ```java
-	public static int hammingWeightByRightShift(int n) {
-		int count = 0;
-		while(n != 0) {
-			if((n & 1) != 0)
-				count++;
-			n >>>= 1;
-		}
-		return count;
-	}
-	
-	public static int hammingWeight(int n) {
-		int count = 0;
-		while(n != 0) {
-			n &= n - 1;
-			count++;
-		}
-		return count;
-	}
+public int hammingWeight(int n) {
+    int count = 0;
+    while(n != 0) {
+        if(n & 1 == 1) count ++;
+        n >>>= 1;
+    }
+    return count;
+}
+
+public int hammingWeight(int n) {
+    int count = 0;
+    while(n != 0) {
+        count ++;
+        n &= n - 1;
+    }
+    return count;
+}
 ```
 
 ### 面试题16：数值的整数次方

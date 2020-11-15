@@ -55,8 +55,6 @@
 	}
 ```
 
-
-
 ### 面试题4：二维数组中的查找
 
 #### [题目](https://leetcode-cn.com/problems/er-wei-shu-zu-zhong-de-cha-zhao-lcof)
@@ -101,8 +99,6 @@
 	}
 ```
 
-
-
 ### 面试题5 替换空格
 
 #### [题目](https://leetcode-cn.com/problems/ti-huan-kong-ge-lcof/)
@@ -137,8 +133,6 @@
 		return s.replaceAll(" ", "%20");
 	}
 ```
-
-
 
 ### 面试题6 从尾到头打印链表
 
@@ -179,8 +173,6 @@
 		System.out.print(head.val + " ");
 	}
 ```
-
-
 
 ### 面试题7 重建二叉树
 
@@ -254,8 +246,6 @@
 	}
 ```
 
-
-
 ### 面试题8 二叉树的下一个节点
 
 #### 题目
@@ -309,8 +299,6 @@
 		}
 	}
 ```
-
-
 
 ### 面试题9 用两个栈实现队列
 

@@ -100,70 +100,33 @@ public int[] reversePrint(ListNode head) {
 
 输入某二叉树的前序遍历和中序遍历的结果，请重建该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如，输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建如图2.6所示的二叉树并输出它的头节点。
 
-- 思路1：先前序找根，后中序找左右子树（递归实现）
-
-##### 思路1
-
-- 递归参数：
-  - 两个数组：前序遍历、中序遍历
-  - 前序遍历的当前左、右端
-  - 中序遍历的当前左、右端 
-- 边界条件：
-  - 在中序遍历数组中根的位置等于当前左端 -> 无左子树
-  - 在中序遍历数组中根的位置等于当前右端 -> 无右子树
-- 前进段：
-  - 左子树情况：
-    - 前序遍历数组左端为当前左端+1
-    - 前序遍历数组右端为当前左端+左子树长度
-    - 中序遍历数组左端为当前左端
-    - 中序遍历数组右端为当前根位置-1
-  - 右子树情况：
-    - 前序遍历数组左端为当前左端+1+左子树长度
-    - 前序遍历数组右端为当前右端
-    - 中序遍历数组左端为当前根位置+1
-    - 中序遍历数组右端为当前右端
-- 返回段：
-  - 返回当前的根
-
-##### 特殊输入
-
-- 数组之一为空
-  - 测试用例：`int[] preorder = null;` `int[] inorder = null;`
-- 数组之一的长度为0
-  - 测试用例：`int[] preorder = new int[0];` `int[] inorder = new int[0];`
-- 两个数组长度不相等
-  - 测试用例： `int[] preorder = {3, 9, 20, 15, 7};` `int[] inorder = {9, 3, 15};`
-
-##### 核心代码
-
 ```java
-	public static TreeNode buildTree(int[] preorder, int[] inorder) {
-		if(preorder == null || inorder == null || preorder.length == 0 || inorder.length == 0 || preorder.length != inorder.length)
-			return null;
-		return recur(preorder, inorder, 
-				0, preorder.length - 1, 0, inorder.length - 1);
-	}
-	
-	public static TreeNode recur(int[] preorder, int[] inorder, 
-			int preLeft, int preRight, int inLeft, int inRight) {
-		TreeNode root = new TreeNode(preorder[preLeft]);
-		int rootPos = 0;
-		for(int i = inLeft; i <= inRight; i++)
-			if(inorder[i] == preorder[preLeft]) {
-				rootPos = i;
-				break;
-			}
-		int leftLength = rootPos - inLeft;
-		if(rootPos == inLeft)
-			root.left = null;
-		else
-			root.left  = recur(preorder, inorder, preLeft + 1, preLeft + leftLength, inLeft, rootPos - 1);
-		if(rootPos == inRight)
-			root.right = null;
-		else
- 			root.right = recur(preorder, inorder, preLeft + leftLength + 1, preRight, rootPos + 1, inRight);
-		return root;
-	}
+public TreeNode buildTree(int[] preorder, int[] inorder) {
+    if(preorder == null || inorder == null || preorder.length == 0 || inorder.length == 0) return null;
+    return recur(preorder, inorder, 0, preorder.length - 1, 0, inorder.length - 1);
+}
+
+public TreeNode recur(int[] preorder, int[] inorder, int preLeft, int preRight, int inLeft, int inRight) {
+    TreeNode root = new TreeNode(preorder[preLeft]);
+    int inRoot = 0;
+    for(int i = inLeft; i <= inRight; i++)
+        if(inorder[i] == root.val) {
+            inRoot = i;
+            break;
+        }
+    int leftLength = inRoot - inLeft;
+    if(inLeft == inRight) {
+        return root;
+    } else if(inRoot == inRight) {
+        root.left = recur(preorder, inorder, preLeft + 1, preRight, inLeft, inRight - 1);
+    } else if(inRoot == inLeft) {
+        root.right = recur(preorder, inorder, preLeft + 1, preRight, inLeft + 1, inRight);
+    } else {
+        root.left = recur(preorder, inorder, preLeft + 1, preLeft + leftLength, inLeft, inRoot - 1);
+        root.right = recur(preorder, inorder, preLeft + leftLength + 1, preRight, inRoot + 1, inRight);
+    }
+    return root; 
+}
 ```
 
 
@@ -174,52 +137,26 @@ public int[] reversePrint(ListNode head) {
 
 给定一颗二叉树和其中一个节点，如何找出中序遍历序列的下一个节点？树中的节点除了有两个分别指向左右子节点的指针，还有一个指向父节点的指针。
 
-- 思路1：分三类考虑
-
-##### 思路1
-
-- 情况1：如果一个节点有右子树，那么它的下一个节点就是它的右子树中最左子节点
-- 情况2 & 3：如果一个节点没有右子树
-  - 情况2：如果节点是它父节点的左子节点，那么它的下一个节点就是它的父节点
-  - 情况3：如果节点是它父节点的右子节点，那么
-    - 沿着指向父节点的指针一直向上遍历，直到找到一个是它父节点的左子节点的节点
-      - 如果直到根节点都没找到，那它就是最后一个节点，没有下一个节点
-
-##### 特殊输入
-
-- 树（根节点）为空
-  - 测试用例：`TreeNode root = null `
-- 指定节点为空
-  - 测试用例：`TreeNode node = null `
-- 没有左右子树的根节点（**下面代码未考虑**）
-  - 测试用例：`TreeNode root = new TreeNode('a'); TreeNode node = root;`
-- 只有左子树的根节点（**下面代码未考虑**）
-  - 测试用例：`TreeNode root = new TreeNode('a'); root.left = new TreeNode('b'); TreeNode node = root;`
-
-##### 核心代码
-
 ```java
-	public static TreeNode findNext(TreeNode root, TreeNode treeNode) {
-		if(root == null || treeNode == null)
-			return null;
-		if(treeNode.right != null) {
-			TreeNode temp = treeNode.right;
-			while(temp.left != null)
-				temp = temp.left;
-			return temp;
-		} else if(treeNode == treeNode.parent.left)
-			return treeNode.parent;
-		else {
-			TreeNode temp = treeNode.parent;
-			while(temp != temp.parent.left)
-			{
-				temp = temp.parent;
-				if(temp == root)
-					return null;
-			}
-			return temp;
-		}
-	}
+public static TreeNode findNext(TreeNode root, TreeNode treeNode) {
+    if(root == null) return null;
+    if(treeNode.right != null) {
+        TreeNode current = treeNode.right;
+        while(current.left != null) current = current.left;
+        return current;
+    } else if(root.parent == null) return null;
+    else if(treeNode == treeNode.parent.left)
+        return treeNode.parent;
+    else {
+        TreeNode current = treeNode.parent;
+        
+        while(current != current.parent.left) {
+            current = current.parent;
+            if(current == root) return null;
+        }
+        return current;
+    }
+}
 ```
 
 
@@ -230,47 +167,31 @@ public int[] reversePrint(ListNode head) {
 
 用两个栈实现一个队列。队列的声明如下，请实现它的两个函数 appendTail 和 deleteHead ，分别完成在队列尾部插入整数和在队列头部删除整数的功能。
 
-- 思路1：分入队和出队考虑
-
-##### 思路1
-
-- 入队：无论何种情况，都压入到第一个栈
-- 出队：无论何种情况，都从第二个栈弹出
-  - 第二个栈不为空，直接弹出
-  - 第二个栈为空
-    - 第一个栈为空，返回-1（表示异常）
-    - 第一个栈不为空，将第一个栈中元素全部压入第二个栈，然后弹出
-
-##### 特殊输入
-
-- 不入队情况下直接出队
-- 出队次数大于入队次数
-
-##### 核心代码
-
 ```java
-	Stack<Integer> stack1;
-	Stack<Integer> stack2;
-	
-	public CQueue_v2() {
-		this.stack1 = new Stack<>();
-		this.stack2 = new Stack<>();
-	}
+Stack<Integer> stack1;
+Stack<Integer> stack2;
+
+public CQueue() {
+	stack1 = new Stack<>();
+    stack2 = new Stack<>();
+}
     
-	public void appendTail(int value) {
-		stack1.push(value);
-	}
+public void appendTail(int value) {
+	stack1.push(value);
+}
     
-	public int deleteHead() {
-		if(stack2.isEmpty())
-			if(stack1.isEmpty())
-				return -1;
-			else
-				while(!stack1.isEmpty())
-					stack2.push(stack1.pop());
-		return stack2.pop();
-	}
+public int deleteHead() {
+    if(stack1.isEmpty() && stack2.isEmpty()) return -1;
+    else {
+        if(stack2.isEmpty())
+            while(!stack1.isEmpty())
+                stack2.push(stack1.pop());
+        return stack2.pop();
+    }
+}
 ```
+
+
 
 ### 面试题10 斐波那契数列
 
@@ -281,40 +202,20 @@ $$
 f(n) = \begin{cases} 0 & \text{n = 0} \\ 1 & \text{n = 1} \\ f(n-1)+f(n-2) & \text{n > 1} \end{cases}
 $$
 
-- 思路1：递归，从上（n）至下（1）求解
-  - 问题在于会重复计算很多次
-- 思路2：循环，从下（1）至上（n）求解
-
-##### 特殊输入
-
-- n小于0
-
-##### 核心代码
-
 ```java
-	public static int fibByRecur(int n) {
-		if(n <= 0)
-			return 0;
-		if(n == 1)
-			return 1;
-		return fibByRecur(n - 1) + fibByRecur(n - 2);
-	}
-	
-	public static int fibByLoop(int n) {
-		if(n <= 0)
-			return 0;
-		if(n == 1)
-			return 1;
-		int fib_0 = 0;
-		int fib_1 = 1;
-		int fib_n = 0;
-		for(int i = 2; i <= n; i++) {
-			fib_n = (fib_0 + fib_1) % 1000000007;
-			fib_0 = fib_1;
-			fib_1 = fib_n;
-		}
-		return fib_n;
-	}
+public int fib(int n) {
+    if(n <= 0) return 0;
+    if(n == 1) return 1;
+    int f_n_2 = 0;
+    int f_n_1 = 1;
+    int f_n = 0;
+    for(int i = 2; i <= n ; i++) {
+        f_n = (f_n_1 + f_n_2) % 1000000007;
+        f_n_2 = f_n_1;
+        f_n_1 = f_n;
+    }
+    return f_n;
+}
 ```
 
 #### [题目二：青蛙跳台阶问题](https://leetcode-cn.com/problems/qing-wa-tiao-tai-jie-wen-ti-lcof/)

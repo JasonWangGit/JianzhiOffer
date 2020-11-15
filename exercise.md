@@ -24,8 +24,6 @@ public void swap(int[] nums, int i, int j) {
 }
 ```
 
-
-
 ### 面试题4：二维数组中的查找
 
 #### [题目](https://leetcode-cn.com/problems/er-wei-shu-zu-zhong-de-cha-zhao-lcof)
@@ -43,8 +41,6 @@ public boolean findNumberIn2DArray(int[][] matrix, int target) {
     return false;
 }
 ```
-
-
 
 ### 面试题5 替换空格
 
@@ -68,8 +64,6 @@ public String replaceSpace(String s) {
 }
 ```
 
-
-
 ### 面试题6 从尾到头打印链表
 
 #### [题目](https://leetcode-cn.com/problems/cong-wei-dao-tou-da-yin-lian-biao-lcof/)
@@ -91,8 +85,6 @@ public int[] reversePrint(ListNode head) {
     return nums;
 }
 ```
-
-
 
 ### 面试题7 重建二叉树
 
@@ -129,8 +121,6 @@ public TreeNode recur(int[] preorder, int[] inorder, int preLeft, int preRight, 
 }
 ```
 
-
-
 ### 面试题8 二叉树的下一个节点
 
 #### 题目
@@ -158,8 +148,6 @@ public static TreeNode findNext(TreeNode root, TreeNode treeNode) {
     }
 }
 ```
-
-
 
 ### 面试题9 用两个栈实现队列
 
@@ -191,8 +179,6 @@ public int deleteHead() {
 }
 ```
 
-
-
 ### 面试题10 斐波那契数列
 
 #### [题目一：求斐波那契数列的第n项](https://leetcode-cn.com/problems/fei-bo-na-qi-shu-lie-lcof/)
@@ -220,34 +206,20 @@ public int fib(int n) {
 
 #### [题目二：青蛙跳台阶问题](https://leetcode-cn.com/problems/qing-wa-tiao-tai-jie-wen-ti-lcof/)
 
-一只青蛙一次可以跳上1级台阶，也可以跳上2级台阶。求该青蛙跳上一个 n级的台阶总共有多少种跳法。
-
-- 思路1：同题目一
-- 思路2：同题目二
-  - 这里需要注意的问题是：f(0)是1，f(1)是1，f(2)是2，这与题目一是有区别的，之后的规律不变
-
-##### 特殊输入
-
-- n小于0
-
-##### 核心代码
-
 ```java
-	public static int numWays(int n) {
-		if(n < 0)
-			return -1;
-		if(n <= 1)
-			return 1;
-		int fib_0 = 1;
-		int fib_1 = 1;
-		int fib_n = 0;
-		for(int i = 2; i <= n; i++) {
-			fib_n = (fib_0 + fib_1) % 1000000007;
-			fib_0 = fib_1;
-			fib_1 = fib_n;
-		}
-		return fib_n;
-	}
+public int numWays(int n) {
+    if(n <= 1) return 1;
+    if(n == 2) return 2;
+    int f_n_2 = 1;
+    int f_n_1 = 2;
+    int f_n = 0;
+    for(int i = 3; i <= n ; i++) {
+        f_n = (f_n_1 + f_n_2) % 1000000007;
+        f_n_2 = f_n_1;
+        f_n_1 = f_n;
+    }
+    return f_n;
+}
 ```
 
 ### 面试题11：旋转数组的最小数字
@@ -256,63 +228,24 @@ public int fib(int n) {
 
 把一个数组最开始的若干个元素搬到数组的末尾，我们称之为数组的旋转。输入一个递增排序的数组的一个旋转，输出旋转数组的最小元素。例如，数组 {3,4,5,1,2} 为 {1,2,3,4,5} 的一个旋转，该数组的最小值为1。  
 
-- 思路1：遍历
-  - 时间复杂度O(n)
-- 思路2：利用二分查找的原理
-  - 时间复杂度O(logn)
-
-##### 思路2
-
-- 循环：利用left、right两个指针，不断缩小寻找的范围
-- 循环结束条件：
-  - left指针与right指针相邻，right指向的元素就是最小值
-
-- 对于大多数情况的正常旋转数组
-  - 如果middle大于等于left，则让left=middle
-  - 如果middle小于等于right，则让right=middle
-- 并未旋转的数组
-  - 根据第一个元素与最后一个元素的大小判定，直接返回第一个元素作为最小值
-- 特殊数组，如{1, 0, 1, 1, 1}
-  - 如果出现left=middle=right，则只能遍历数组寻找最小值
-
-##### 特殊输入
-
-- 数组为空
-  - 测试用例：`int[] numbers = null;`
-- 数组长度为0
-  - 测试用例：`int[] numbers = new int[0];`
-- 数组并未旋转
-  - 测试用例：`int[] numbers = {1, 2, 3, 4, 5};`
-- 特殊数组
-  - 测试用例：`int[] numbers = {1, 0, 1, 1, 1};` `int[] numbers = {2, 2, 2, 0, 1};`
-
-##### 核心代码
-
 ```java
-	public static int minArray(int[] numbers) {
-		if(numbers == null || numbers.length == 0)
-			return -1;
-		if(numbers[0] < numbers[numbers.length - 1])
-			return numbers[0];
-		int left = 0;
-		int right = numbers.length - 1;
-		int middle = 0;
-		while(left != right - 1) {
-			middle = (left + right) / 2;
-			if(numbers[middle] == numbers[left] && numbers[middle] == numbers[right]) {
-				int min = numbers[0];
-				for(int i : numbers) {
-					min = Math.min(min, i);
-				}
-				return min;
-			}
-			if(numbers[middle] >= numbers[left])
-				left = middle;
-			if(numbers[middle] <= numbers[right])
-				right = middle;
-		}
-		return numbers[right];
-	}
+public int minArray(int[] numbers) {
+    if(numbers == null || numbers.length == 0) return -1;
+    if(numbers[0] < numbers[numbers.length - 1]) return numbers[0];
+    int left = 0, right = numbers.length - 1;
+    while(left == right - 1) {
+        int middle = (left + right) << 1;
+        if(numbers[middle] == numbers[left] && numbers[middle] == numbers[right]) {
+            int min = numbers[left];
+            for(int i = left; i <= right; i++) {
+                min = Math.min(min, numbers[i]);
+            }
+            return min;
+        } else if(numbers[middle] >= numbers[left]) left = middle;
+        else if(numbers[middle] <= numbers[right]) right = middle;
+    }
+    return numbers[right];
+}
 ```
 
 ### 面试题12：矩阵中的路径
@@ -324,84 +257,34 @@ $$
 \begin{matrix} a & \underline b & t & g \\ c & \underline f & \underline c & s \\ j & d & \underline e & h \end{matrix}
 $$
 
-- 思路1：回溯法（递归实现）
-
-##### 思路1
-
-- 递归参数：
-  - 字符矩阵，判断是否访问过的矩阵，目标字符串
-  - 当前访问到目标字符串的位置
-  - 当前访问到字符矩阵的位置：行、列
-- 边界条件：
-  - 矩阵行、列越界：false
-    - 行小于0或大于等于length
-    - 列小于0或大于等于length
-  - 字符矩阵当前行、列位置的值不等于目标字符串当前位置的值：false
-  - 字符矩阵当前列、列位置已被访问：false
-  - 当前访问到目标字符串的位置等于目标字符串的长度-1：true
-- 前进段：
-  - 注意前进前需将已访问置为true，前进后将已访问置为false
-  - 向上
-    - 行-1，列不动
-  - 向下
-    - 行+1，列不动
-  - 向左
-    - 行不动，列-1
-  - 向右
-    - 行不动，列+1
-- 返回段：
-  - 返回上、下、左、右四种情况的或
-
-##### 特殊输入
-
-- 目标字符串为空：true
-  - 测试用例：`String word = null;` 
-- 字符矩阵为空：false（这里这样写是基于先执行上一条判断，目标字符串不为空、字符矩阵为空，一定false）
-  - 测试用例：`char[][] board = false;`
-- 目标字符串长度为0：true
-  - 测试用例： `String word = "";` 
-- 字符矩阵长度为0：false（这里这样写是基于先执行上一条判断，目标字符串长度不为0、字符矩阵长度为0，一定false）
-  - 测试用例：`char[][] board = new char[0][0];`
-
-##### 核心代码
-
 ```java
-	public static boolean exist(char[][] board, String word) {
-		if(word == null)
-			return true;
-		if(board == null)
-			return false;
-		if(word.length() == 0)
-			return true;
-		if(board.length == 0)
-			return false;
-		if(word.length() > board.length * board[0].length)
-			return false;
-		boolean[][] isVisited = new boolean[board.length][board[0].length];
-		for(int i = 0; i < board.length; i++)
-			for(int j = 0; j < board[0].length; j++)
-				if(recur(board, isVisited, word, 0, i, j))
-					return true;
-		return false;
-	}
-	
-	public static boolean recur(char[][] board, boolean[][] isVisited, String word,
-			int index, int i, int j) {
-		if(i < 0 || j < 0 || i >= board.length || j >= board[0].length)
-			return false;
-		if(word.charAt(index) != board[i][j] || isVisited[i][j])
-			return false;
-		if(index == word.length() - 1)
-			return true;
-		isVisited[i][j] = true;
-		index++;
-		boolean flag = recur(board, isVisited, word, index, i - 1, j) ||
-				recur(board, isVisited, word, index, i + 1, j) ||
-				recur(board, isVisited, word, index, i, j - 1) ||
-				recur(board, isVisited, word, index, i, j + 1);
-		isVisited[i][j] = false;
-		return flag;
-	}
+public boolean exist(char[][] board, String word) {
+    if(word == null) return true;
+    if(board == null) return false;
+    if(word.length() == 0) return true;
+    if(board.length == 0) return false;
+    if(word.length() > board.length * board[0].length) return false;
+    boolean[][] isVisited = new boolean[board.length][board[0].length];
+	for(int i = 0; i < board.length; i++)
+        for(int j = 0; j < board[0].length; j++)
+            if(recur(board, isVisited, word, 0, i, j))
+                return true;
+    return false;
+}
+
+public boolean recur(char[][] board, boolean[][] isVisited, String word, int index, int row, int col) {
+    if(row < 0 || row >= board.length || col < 0 || col >= board[0].length) return false;
+    if(isVisited[row][col] || board[row][col] != word.charAt(index)) return false;
+    if(index == word.length() - 1) return true;
+    index++;
+    isVisited[row][col] = true;
+    boolean result = recur(board, isVisited, word, index, row + 1, col)
+        || recur(board, isVisited, word, index, row - 1, col)
+        || recur(board, isVisited, word, index, row, col + 1)
+        || recur(board, isVisited, word, index, row, col - 1);
+    isVisited[row][col] = false;
+    return result;
+}
 ```
 
 ### 面试题13：机器人的运动范围

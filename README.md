@@ -2152,7 +2152,7 @@ class MinStack {
 	}
 ```
 
-### 面试40：最小的k个数
+### 面试题40：最小的k个数
 
 #### [题目](https://leetcode-cn.com/problems/zui-xiao-de-kge-shu-lcof/)
 
@@ -2261,11 +2261,33 @@ class MinStack {
 	}
 ```
 
+### 面试题52：两个链表的第一个公共节点
+
+#### [题目](https://leetcode-cn.com/problems/liang-ge-lian-biao-de-di-yi-ge-gong-gong-jie-dian-lcof/)
+
+输入两个链表，找出它们的第一个公共节点。
+
+- 思路1：遍历链表1，以每一个节点遍历链表2，寻找公共节点
+  - 时间复杂度O(mn)
+- 思路2：利用辅助栈，依次对比两个栈的弹出节点
+  - 时间复杂度O(m+n)
+  - 空间复杂度O(m+n)
+- 思路3：先遍历两个链表得到长度，然后以尾部对齐思想让长链表先走m-n步（假设m大于n）
+  - 时间复杂度O(m+n)
+
+##### 思路2
 
 
 
+##### 特殊输入
 
 
+
+##### 核心代码
+
+```java
+
+```
 
 
 

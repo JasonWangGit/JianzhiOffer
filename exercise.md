@@ -76,38 +76,20 @@ public String replaceSpace(String s) {
 
 输入一个链表的头节点，从尾到头反过来返回每个节点的值（用数组返回）。
 
-- 思路1：利用辅助栈
-- 思路2：利用递归
-
-##### 特殊输入
-
-- 链表为空（实际上，由于while循环的条件，不用考虑）
-  - 测试用例：`ListNode head = null;`
-
-##### 核心代码
-
 ```java
-	public static int[] reversePrintByStack(ListNode head) {
-		Stack<Integer> stack = new Stack<>();
-		int i = 0;
-		while(head != null) {
-			stack.push(head.val);
-			i++;
-			head = head.next;
-		}
-		int[] nums = new int[i];
-		i = 0;
-		while(!stack.isEmpty())
-			nums[i++] = stack.pop();
-		return nums;
-	}
-	
-	public static void reversePrintByRecur(ListNode head) {
-		if(head == null)
-			return;
-		reversePrintByRecur(head.next);
-		System.out.print(head.val + " ");
-	}
+public int[] reversePrint(ListNode head) {
+    Stack<Integer> stack = new Stack<>();
+    int index = 0;
+    while(head != null) {
+        index++;
+        stack.push(head.val);
+        head = head.next;
+    }
+    int[] nums = new int[index];
+    for(int i = 0; i < index; i++)
+        nums[i] = stack.pop();
+    return nums;
+}
 ```
 
 

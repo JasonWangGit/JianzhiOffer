@@ -2286,7 +2286,61 @@ class MinStack {
 ##### 核心代码
 
 ```java
+	public static ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+		int countA = 0, countB = 0;
+		ListNode currentA = headA, currentB = headB;
+		while(currentA != null) {
+			countA++;
+			currentA =currentA.next;
+		}
+		while(currentB != null) {
+			countB++;
+			currentB = currentB.next;
+		}
+		if(countA > countB)
+			while(countA > countB) {
+				countA--;
+				headA = headA.next;
+			}
+		else
+			while(countB > countA) {
+				countB--;
+				headB = headB.next;
+			}
+		while(countA > 0) {
+			if(headA == headB) return headA;
+			countA--;
+			headA = headA.next;
+			headB = headB.next;
+		}
+		return null;
+	}
 
+	public static ListNode getIntersectionNodeByStack(ListNode headA, ListNode headB) {
+		Stack<ListNode> stackA = new Stack<>();
+		Stack<ListNode> stackB = new Stack<>();
+		while(headA != null) {
+			stackA.push(headA);
+			headA = headA.next;
+		}
+		while(headB != null) {
+			stackB.push(headB);
+			headB = headB.next;
+		}
+		ListNode temp = null;
+		boolean isSame = false;
+		while(!stackA.isEmpty() && !stackB.isEmpty()) {
+			if(stackA.peek() == stackB.peek()) {
+				temp = stackA.pop();
+				stackB.pop();
+				isSame = true;
+			} else {
+				if(!isSame) return null;
+				else break;
+			}
+		}
+		return temp;
+	}
 ```
 
 

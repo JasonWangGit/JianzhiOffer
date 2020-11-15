@@ -53,5 +53,4 @@ public class Solution_v2 {
 	        return current;
 	    }
 	}
-	
 }

@@ -2061,17 +2061,107 @@ class MinStack {
 数组中有一个数字出现的次数超过数组长度的一半，请找出这个数字。例如，输入一个长度为9的数组{1, 2, 3, 2, 2, 2, 5, 4, 2}。由于数字2在数组中出现了5次，超过数组长度的一半，因此输出2。
 
 - 思路1：先排序再遍历
-  - 时间复杂度O(logn) + O(n)
+  - 时间复杂度O(nlogn) + O(n)
 - 思路2：利用快排中的split数组思想
+- 思路3：摩尔投票法
+  - 第一个数开始，count默认为1
+    - 如果下一个数相同，count+1
+    - 如果下一个数不同，count-1
+  - 如果count为0，则从下一个数开始，count重置为1
+  - 最后一次设为1的数一定为目标数
 
-##### 思路1
+##### 思路2
+
+- 参数
+  - start、middle（固定为数组长度的一半）、end、index
+- 初始条件
+  - start等于0，end等于数组长度-1
+  - index等于partition(start, end)结果
+- 循环体内（while循环，index不等于middle）
+  - 如果index大于middle
+    - index等于partition(start, index - 1)
+  - 如果index小于middle
+    - index指向partition(index + 1, end)
+
+##### 思路3
+
+- 参数
+  - count、result
+- 初始条件
+  - count等于1，result等于nums[0]
+- 循环体内（for循环，从1到length-1）
+  - 如果count等于0
+    - result置为当前位置元素
+    - count重置为1
+  - 如果count不等于0
+    - 如果当前位置元素不等于result
+      - count--
+    - 如果当前位置元素等于result
+      - count++
 
 ##### 特殊输入
+
+- 数组为空或数组长度为0
+- 数组中间的数字重复次数不到一半
 
 ##### 核心代码
 
 ```java
-
+	public static int majorityElement(int[] nums) {
+		if(!isValidArray(nums))
+			return -1;
+		int count = 1;
+		int result = nums[0];
+		for(int i = 1; i < nums.length; i++) {
+			if(count == 0) {
+				result = nums[i];
+				count = 1;
+			} else
+				if(nums[i] != result)
+					count--;
+				else
+					count++;
+		}
+		if(!isMoreThanHalf(nums, result))
+			return -1;
+		return result;
+	}
+	
+	public static int majorityElementBySplit(int[] nums) {
+		if(!isValidArray(nums))
+			return -1;
+		int middle = nums.length >> 1;
+		int start = 0;
+		int end = nums.length - 1;
+		int index = QuickSort.split(nums, start, end);
+		while(index != middle)
+			if(index > middle) {
+				end = index - 1;
+				index = QuickSort.split(nums, start, end);
+			} else {
+				start = index + 1;
+				index = QuickSort.split(nums, start, end);
+			}
+		if(!isMoreThanHalf(nums, nums[index]))
+			return -1;
+		return nums[index];
+	}
+	
+	public static boolean isValidArray(int[] nums) {
+		if(nums == null || nums.length == 0)
+			return false;
+		return true;
+	}
+	
+	public static boolean isMoreThanHalf(int[] nums, int target) {
+		int count = 0;
+		for(int i : nums)
+			if(i == target)
+				count++;
+		if((count << 1) > nums.length)
+			return true;
+		return false;
+	}
 ```
 
 ### 面试40：最小的k个数
@@ -2080,16 +2170,107 @@ class MinStack {
 
 输入整数数组 n ，找出其中最小的 k个数。例如，输入4、5、1、6、2、7、3、8这8个数字，则最小的4个数字是1、2、3、4。
 
-- 思路1：
+- 思路1：直接遍历数组，统计数字出现的次数（适用于数字可能很少的情况）
+  - 时间复杂度O(n)
+- 思路2：排序，然后遍历
+  - 时间复杂度O(nlogn)
+- 思路3：利用快排的partition思想（前提是输入的数组可改变，且k个数未必是排序的）
+  - 时间复杂度O(logn)
+- 思路4：利用辅助容器（优先级队列、堆、红黑树），实际treeMap好用
+  - 时间复杂度O(nlogk)
 
-##### 思路1
+##### 思路3
+
+- 参数
+  - start、end、index
+- 初始条件
+  - start等于0，end等于数组长度-1
+  - index等于partition(start, end)结果
+- 循环体内（while循环，index不等于k-1）
+  - 如果index大于k-1
+    - index等于partition(start, index - 1)
+  - 如果index小于k-1
+    - index指向partition(index + 1, end)
+
+##### 思路4
+
+- 参数
+  - i
+- 初始条件
+  - i等于0，result等于nums[0]
+- 循环体内（for循环，从0到length-1）
+  - 如果i<k
+    - `treeMap.put(arr[i], treeMap.getOrDefault(arr[i], 0) + 1);`
+  - 如果i大于等于k
+    - 如果当前位置元素小于treeMap中最大元素（存在key中）
+      - `treeMap.put(arr[i], treeMap.getOrDefault(arr[i], 0) + 1);`
+      - 如果最大元素对应的value等于1
+        - 移除最大元素
+      - 如果最大元素对应的value不等于1
+        - 则把最大愿随对应的value减1
 
 ##### 特殊输入
+
+- 数组为空或数组长度为0
 
 ##### 核心代码
 
 ```java
-
+	public static int[] getLeastNumbers(int[] arr, int k) {
+		if(arr == null)
+			return null;
+		if(arr.length == 0 || k <=0)
+			return new int[0];
+		if(k > arr.length)
+			return arr;
+		TreeMap<Integer, Integer> treeMap = new TreeMap<>();
+		for(int i = 0; i < arr.length; i++) {
+			if(i < k)
+				treeMap.put(arr[i], treeMap.getOrDefault(arr[i], 0) + 1);
+			else {
+				Map.Entry<Integer, Integer> lastEntry = treeMap.lastEntry();
+				if(arr[i] < lastEntry.getKey()) {
+					treeMap.put(arr[i], treeMap.getOrDefault(arr[i], 0) + 1);
+					if(lastEntry.getValue() == 1)
+						treeMap.pollLastEntry();
+					else
+						treeMap.put(lastEntry.getKey(), lastEntry.getValue() - 1);
+				}
+			}
+		}
+		int[] result = new int[k];
+		int i = 0;
+		for(Map.Entry<Integer, Integer> entry : treeMap.entrySet()) {
+			for(int j = 0; j < entry.getValue(); j++)
+				result[i++] = entry.getKey();
+		}
+		return result;
+	}
+	
+	public static int[] getLeastNumbersBySplit(int[] arr, int k) {
+		if(arr == null)
+			return null;
+		if(arr.length == 0 || k <=0)
+			return new int[0];
+		if(k > arr.length)
+			return arr;
+		int start = 0;
+		int end = arr.length - 1;
+		int middle = QuickSort.split(arr, start, end);
+        while(middle + 1 != k) {
+        	if(middle + 1> k) {
+        		end = middle - 1;
+        		middle = QuickSort.split(arr, start, end);
+        	} else {
+        		start = middle + 1;
+        		middle = QuickSort.split(arr, start, end);
+        	}
+        }
+        int[] result = new int[k];
+        for(int i = 0; i < k; i++)
+        	result[i] = arr[i];
+        return result;
+	}
 ```
 
 

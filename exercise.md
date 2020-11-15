@@ -293,168 +293,66 @@ public boolean recur(char[][] board, boolean[][] isVisited, String word, int ind
 
 地上有一个m行n列的方格 。一个机器人从坐标 (0, 0) 的格子开始移动，它每次可以向左、右、上、下移动一格，但不能进入行坐标和列坐标的**数位之和**大于k的格子。例如，当k为18时，机器人能够进入方格 (35, 37) ，因为3+5+3+7=18。但它不能进入方格 (35, 38)，因为3+5+3+8=19。请问该机器人能够到达多少个格子？
 
-- 思路1：回溯法（递归实现）
-
-##### 思路1
-
-- 递归参数：
-  - 判断是否访问过的矩阵
-  - k值
-  - 当前访问到矩阵的位置：行、列
-- 边界条件：
-  - 矩阵行、列越界：0
-    - 行小于0或大于等于length
-    - 列小于0或大于等于length
-  - 矩阵当前列、列位置已被访问：0
-  - 矩阵当前列、列位置是不可进入的：0
-  - 矩阵当前列、列位置是可进入的：1
-- 前进段：
-  - 注意前进前需将已访问置为true
-  - 向上
-    - 行-1，列不动
-  - 向下
-    - 行+1，列不动
-  - 向左
-    - 行不动，列-1
-  - 向右
-    - 行不动，列+1
-- 返回段：
-  - 返回上、下、左、右四种情况和当前位置（1）的和
-
-##### 特殊输入
-
-- m或n的值小于0
-
-##### 核心代码
-
 ```java
-	public static int movingCount(int m, int n, int k) {
-		if(m < 0 || n < 0)
-			return -1;
-		boolean[][] isVisited = new boolean[m][n];
-		return recur(isVisited, k, 0, 0);
-	}
-	
-	public static int recur(boolean[][] isVisited, int k, int i, int j) {
-		if(i < 0 || j < 0 || i >= isVisited.length || j >= isVisited[0].length)
-			return 0;
-		if(isVisited[i][j])
-			return 0;
-		isVisited[i][j] = true;
-		if(isEnterable(k, i, j))
-			return 1 + recur(isVisited, k, i - 1, j) + recur(isVisited, k, i + 1, j)
-		+ recur(isVisited, k, i, j - 1) + recur(isVisited, k, i, j + 1);
-		else
-			return 0;
+public int movingCount(int m, int n, int k) {
+    boolean[][] isVisited = new boolean[m][n];
+    return recur(isVisited, 0, 0, k);
+}
 
-	}
-	
-	public static boolean isEnterable(int k, int i, int j) {
-		int digitSum = 0;
-		while(i != 0) {
-			digitSum += i % 10;
-			i /= 10;
-		}
-		while(j != 0) {
-			digitSum += j % 10;
-			j /= 10;
-		}
-		if(digitSum > k)
-			return false;
-		else
-			return true;
-	}
+public int recur(boolean[][] isVisited, int m, int n, int k) {
+    if(m < 0 || m >= isVisited.length || n < 0 || n >= isVisited[0].length) return 0;
+    if(digitSum(m, n) > k || isVisited[m][n]) return 0;
+    isVisited[m][n] = true;
+    return 1 + recur(isVisited, m + 1, n, k) + recur(isVisited, m - 1, n, k)
+        + recur(isVisited, m, n + 1, k) + recur(isVisited, m, n - 1, k);
+}
+
+public int digitSum(int m, int n) {
+    int sum = 0;
+    while(m != 0) {
+        sum += m % 10;
+        m /= 10;
+    }
+    while(n != 0) {
+        sum += n % 10;
+        n /= 10;
+    }
+    return sum;
+}
 ```
 
 ### 面试题14：剪绳子
 
 #### [题目](https://leetcode-cn.com/problems/jian-sheng-zi-lcof/)
 
-给你一根长度为 n 的绳子，请把绳子剪成整数长度的 m 段（m、n都是整数，n>1并且m>1），每段绳子的长度记为 k[0], k[1], ..., k[m] 。请问 k[0] × k[1] × ... × k[m] 可能的最大乘积是多少？例如，当绳子的长度是8时，我们把它剪成长度分别为2、3、3的三段，此时得到的最大乘积是18。
-
-- 思路1：动态规划，从下往上计算（避免重复计算）
-- 思路2：贪婪
-
-##### 思路1
-
-- 首先，f(1)为0，f(2)为1（1*1），f(3)为2（2\*1），这是因为至少要剪1刀导致的
-
-$$
-f(n) = max(f(i) * f(n - i))
-$$
-
-- 对长度为n的绳子，最大乘积是剪一刀与另一刀最大值的所有情况的最大值 ，而另一刀的最大值可能是由若干刀的乘积组成的，所以需要将长度为i时候的最大值存储在一个数组已供使用
-- 根据这种规律从下往上计算，比如
-  - f(4)有f(1)和f(3)、f(2)和f(2)两种情况，则取他们的最大值记录在一个数组里
-    - 这里f(1)为1，f(2)为2，f(3)为3，这是因为已经剪过1刀了，注意和上面的不同
-
-- 数组的最后一项就是f(n)
-
-##### 思路2
-
-- 可以发现当n >= 5时候，3 * (n - 3) 大于 2 * (n - 2) 和1 * (n - 1) 和n
-- 所以应该尽可能多地剪长度为3的绳子
-- 一直按长度为3去剪，如果最后剩余4，则取2 * 2
-- 如果剩余长度小于4，则取对应长度即可
-- **注意**：result用long的原因是result *= 3有可能会越界
-
-##### 特殊输入
-
-- 长度是负数
-- 长度是0
-- 长度是比较大的数
-
-##### 核心代码
-
 ```java
-	public static int cuttingRopeByDP(int n) {
-		if(n < 0)
-			return -1;
-		if(n < 2)
-			return 0;
-		if(n == 2)
-			return 1;
-		if(n == 3)
-			return 2;
-		int[] maxArray = new int[n + 1];
-		maxArray[1] = 1;
-		maxArray[2] = 2;
-		maxArray[3] = 3;
-		int max;
-		for(int i = 4; i <= n; i ++) {
-			max = maxArray[i - 1] * maxArray[1];
-			for(int j = 2; j <= i / 2; j++)
-				max = Math.max(max, (maxArray[i - j]) * maxArray[j]);
-			maxArray[i] = max;
-		}
-		return maxArray[n];
-	}
-	
-	public static int cuttingRopeByGreedy(int n) {
-		if(n < 0)
-			return -1;
-		if(n < 2)
-			return 0;
-		if(n == 2)
-			return 1;
-		if(n == 3)
-			return 2;
-		long result = 1l;
-		while(n > 4) {
-			n -= 3;
-			result *= 3;
-			result %= 1000000007;
-		}
-		if(n == 4) {
-			result *= 4;
-			result %= 1000000007;
-		}
-		else {
-			result *= n;
-			result %= 1000000007;
-		}
-		return (int) result;	
-	}
+public int cuttingRope(int n) {
+    if(n <= 1) return 0;
+    if(n == 2) return 1;
+    if(n == 3) return 2;
+    int[] max = new int[n + 1];
+    max[1] = 1;
+    max[2] = 2;
+    max[3] = 3;
+    for(int i = 4; i <= n; i++) {
+        max[i] = max[1] * max[i - 1];
+        for(int j = 2; j <= (i >> 1); j++)
+            max[i] = Math.max(max[i], max[j] * max[i - j]);
+    }
+    return max[n];
+}
+
+public int cuttingRope(int n) {
+    if(n <= 1) return 0;
+    if(n <= 3) return n - 1;
+    if(n == 4) return 4;
+    int result = 1;
+    do {
+        result *= 3;
+        n -= 3;
+    } while(n > 4);
+    return result * n;
+}
 ```
 
 ### 面试题15：二进制种1的个数

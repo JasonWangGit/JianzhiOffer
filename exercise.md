@@ -379,58 +379,29 @@ public int hammingWeight(int n) {
 }
 ```
 
-### 面试题16：数值的整数次方
+### 面试题16：数值的整数次方（？Leetcode提交不通过）
 
 #### [题目](https://leetcode-cn.com/problems/shu-zhi-de-zheng-shu-ci-fang-lcof/)
 
 实现函数double Power(double base, int exponent)，求base的exponent次方。不得使用库函数，同时不需要考虑大数问题。
 
-- 思路1：普通循环，乘n次
-- 思路2：二分法，递归实现
-- 思路3：二分法，循环实现
-
-##### - 思路3
-
-$$
-a^n = \begin{cases} a^{n/2} \cdot a^{n/2} & \text{n为偶数} \\ a^{(n-1)/2} \cdot a^{(n-1)/2} \cdot a & \text{n为奇数} \end{cases}
-$$
-
-- 初始条件
-  - n为0时
-    - x为0：错误（异常）
-    - x不为0：return 1
-  - n大于0
-  - n小于0
-    - `n = -n;`
-    - `x = 1 / x;`
-- 循环体内
-  - n为偶数时
-    - `x *= x;` `n >>= 1;`
-  - n为奇数时（`(n & 1) == 1`）
-    - 除上述外，`result *= x;`
-
-##### 核心代码
-
 ```java
-	public static double myPowByLoop(double x, int n) {
-		double result = 1;
-		long p = n;
-		if(p == 0 && isEqual(x, 0.0))
-			return 0.0;
-		if(p == 0 && !isEqual(x, 0.0))
-			return 1.0;
-		if(p < 0) {
-			x = 1 / x;
-			p = -p;
-		}
-		while(p > 0) {
-			if((p & 1) == 1)
-				result *= x;
-			x *= x;
-			p >>= 1;
-		}
-		return result;
-	}
+public double myPow(double x, int n) {
+    if(n == 0)
+        if(x == 0.0) return -1;
+        else return 1;
+    if(n < 0) {
+        n = -n;
+        x = 1 / x;
+    }
+    int result = 1;
+    while(n > 0) {
+        if((n & 1) == 1) result *= x;
+        x *= x;
+        n >>= 1;
+    }
+    return result;
+}
 ```
 
 ### 面试题17：打印从1到最大的n位数
@@ -439,60 +410,31 @@ $$
 
 输入数字 n，按顺序打印出从 1 到最大的 n 位十进制数。比如输入 3，则打印出 1、2、3 一直到最大的 3 位数 999。
 
-- 思路1：计算出n位数最大值，然后从1开始循环输出（不适用于大数）
-- 思路2：对一个长度为n的字符数组，通过递归进行全排列（适用于大数，但大数递归层级过深）
-
-##### 思路2
-
-- 递归参数：
-  - 字符数组
-  - n值
-  - index：当前到达n位数的第几位（左起是第1位，最右是第n位）
-- 边界条件：
-  - index == n
-- 前进段：
-  - 对下一位进行全排列（0~9），index + 1
-- 返回段：
-  - 空返回，当index == n时打印
-    - 需要构造removeZeroPrinter的打印方法
-      - 打印方法需要考虑：不打印第一个数 0、不打印0后的空格
-
-##### 特殊输入
-
-- n等于0或小于0
-
-##### 核心代码
-
 ```java
-	public static void recur(char[] chars, int n, int index) {
-		if(index == n) {
-			removeZeroPrinter(chars);
-			return;
-		}
-		for(int i = 0; i < 10; i++) {
-			chars[index] = (char) ('0' + i);
-			recur(chars, n, index + 1);
-		}
-	}
+public static void printBigNumbers(int n) {
+	char[] result = new char[n];
+    recur(result, n, 0)
+}
+	
+public static void recur(char[] result, int n, int index) {
+    if(index == n) {
+        removeZeroPrinter(result);
+        return;
+    }
+    for(int i = 0; i < 10; i++) {
+        result[index] = (char)('0' + i);
+        recur(result, n, index + 1);
+    }
+}
 
-	public static void removeZeroPrinter(char[] chars) {
-		int index = 0;
-		boolean firstFlag = true;
-		while(true) {
-			if(index == chars.length) {
-				System.out.print("");
-				firstFlag = false;
-				break;
-			}
-			if(chars[index] != '0')
-				break;
-			index++;
-		}
-		while(index < chars.length)
-			System.out.print(chars[index++]);
-		if(firstFlag)
-			System.out.print(" ");
-	}
+public static void removeZeroPrinter(char[] chars) {
+    boolean startPrint = false;
+    for(char c : chars) {
+        if(c != '0' && !startPrint) startPrint = true;
+        if(startPrint) System.out.print(c);
+    }
+    if(startPrint) System.out.print(" ");
+}
 ```
 
 
@@ -503,42 +445,21 @@ $$
 
 输入一个链表，输出该链表中倒数第k个节点。为了符合大多数人的习惯，本题从1开始计数，即链表的尾节点是倒数第1个节点。例如，一个链表有6个节点，从头节点开始，它们的值依次是1、2、3、4、5、6。这个链表的倒数第3个节点是值为4的节点。
 
-- 思路1：第一次遍历得到链表的节点个数n，第二次遍历找出第n - k个节点
-- 思路2：一次遍历，利用两个指针，使它们间隔k - 1（实际中不一定是k - 1，取决于index是先自增，还是判断后再自增）
-
-##### 思路2
-
-- 起始：两个指针均指向head
-- 快的指针先走k - 1个节点，从第k个节点开始，两个指针同时走（实际可能是k，要看index自增的位置）
-- 结束：快的指针的next为空
-
-##### 特殊输入
-
-- 链表为空：返回null
-- k等于0或k小于0：返回null
-- 链表长度小于k：返回null
-
 ##### 核心代码
 
 ``` java
-	public static ListNode getKthFromEnd(ListNode head, int k) {
-		if(head == null)
-			return null;
-		if(k <= 0)
-			return null;
-		ListNode fast = head;
-		ListNode slow = head;
-		int index = 1;
-		while(fast.next != null) {
-			fast = fast.next;
-			index++;
-			if(index > k)
-				slow = slow.next;
-		}
-		if(index < k)
-			return null;
-		return slow;
-	}
+public ListNode getKthFromEnd(ListNode head, int k) {
+    ListNode fast = head;
+    ListNode slow = head;
+    int index = 0;
+    while(fast != null) {
+        fast = fast.next;
+        if(index > k) {
+            slow = slow.next;
+            index++;
+        }
+    }
+}
 ```
 
 ### 面试题23：链表中环的入口节点

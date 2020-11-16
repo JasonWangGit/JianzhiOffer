@@ -454,11 +454,12 @@ public ListNode getKthFromEnd(ListNode head, int k) {
     int index = 0;
     while(fast != null) {
         fast = fast.next;
-        if(index > k) {
+        if(index > k - 1) {
             slow = slow.next;
-            index++;
         }
+        index++;
     }
+    return slow;
 }
 ```
 
@@ -492,45 +493,42 @@ public ListNode getKthFromEnd(ListNode head, int k) {
 ##### 核心代码
 
 ```java
-	public static ListNode findRingEntry(ListNode head) {
-		int n = hasRing(head);
-		if(n == 0)
-			return null;
-		ListNode fast = head;
-		ListNode slow = head;
-		int index = 0;
-		while(true) {
-			fast = fast.next;
-			index++;
-			if(index > n)
-				slow = slow.next;
-			if(slow == fast)
-				return slow;
-		}
-	}
-	
-	public static int hasRing(ListNode head) {
-		if(head == null)
-			return 0;
-		ListNode fast = head;
-		ListNode slow = head;
-		while(fast.next.next != null) {
-			fast = fast.next.next;
-			slow = slow.next;
-			if(fast == slow) {
-				ListNode temp = slow;
-				int number = 0;
-				while(true) {
-					slow = slow.next;
-					number++;
-					if(slow == temp)
-						break;
-				}
-				return number;
-			}
-		}
-		return 0;
-	}
+public static ListNode findRingEntry(ListNode head) {
+    ListNode fast = head;
+    ListNode slow = head;
+    int index = 0;
+    int k = hasRing(head);
+    if(k == 0) return null;
+    else {
+        while(true) {
+            fast = fast.next;
+            if(index > k - 1) slow = slow.next;
+            index++;
+            if(fast == slow) return fast;
+        }
+    }
+}
+
+public static int hasRing(ListNode head) {
+    ListNode fast = head;
+    ListNode slow = head;
+    boolean ringFlag = false;
+    int count = 0;
+    ListNode temp = null;
+    while(fast != null) {
+        fast = fast.next.next;
+        slow = slow.next;
+        if(fast == slow && !ringFlag) {
+            temp = slow;
+            ringFlag = true;
+        }
+        if(ringFlag) {
+            if(slow == temp && count != 0) break;
+            count++;
+        }
+    }
+    return count;
+}
 ```
 
 ### 面试题24：反转链表

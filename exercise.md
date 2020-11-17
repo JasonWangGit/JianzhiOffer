@@ -765,67 +765,31 @@ public int min() {
 
 #### [题目](https://leetcode-cn.com/problems/zhan-de-ya-ru-dan-chu-xu-lie-lcof/)
 
-- 思路1：构建一个栈来模拟压入弹出操作（循环实现）
-
-##### 思路1
-
-- 参数
-  - pushed、poped数组的下标
-
-- 初始条件
-  - indexPushed、indexPoped都为0
-- 循环体内（死循环）
-  - 如果栈为空
-    - 将pushed的当前元素压入栈，并指向下一个元素
-  - 如果栈不为空
-    - 如果poped的当前元素等于栈顶元素
-      - 弹出栈，并将poped指向下一个元素
-      - 如果poped指向了最后一个元素的下一个
-        - 返回true
-    - 如果poped的当前元素不等于栈顶元素
-      - 如果pushed没有指向最后一个元素的下一个
-        - 将pushed的当前元素压入栈
-      - 如果pushed指向最后一个元素的下一个
-        - 返回false
-
-##### 特殊输入
-
-- pushed和poped同时为空：ture
-- pushed或poped为空：false
-- pushed和poped的长度同时为0：ture
-- pushed或poped的长度为0：false
-
-##### 核心代码
+输入两个整数序列，第一个序列表示栈的压入顺序，请判断第二个序列是否为该栈的弹出顺序。假设压入栈的所有数字均不相等。例如，序列{1,2,3,4,5}是某栈的压栈序列，序列{4,5,3,2,1}是该压栈序列对应的一个弹出序列，但{4,3,5,1,2}就不可能是该压栈序列的弹出序列。
 
 ```java
-	public static boolean validateStackSequences(int[] pushed, int[] popped) {
-		if(pushed == null && popped == null)
-			return true;
-		if(pushed == null || popped == null)
-			return false;
-		if(pushed.length == 0 && popped.length == 0)
-			return true;
-		if(pushed.length == 0 || popped.length == 0)
-			return false;
-		Stack<Integer> stack = new Stack<>();
-		int indexPushed = 0;
-		int indexPoped = 0;
-		while(true) {
-			if(stack.isEmpty()) 
-				stack.push(pushed[indexPushed++]);
-			else
-				if(popped[indexPoped] == stack.peek()) {
-					popped[indexPoped++] = stack.pop();
-					if(indexPoped == popped.length)
-						return true;
-				}
-				else
-					if(indexPushed < pushed.length)
-						stack.push(pushed[indexPushed++]);
-					else
-						return false;
-		}
-	}
+public boolean validateStackSequences(int[] pushed, int[] popped) {
+    Stack<Integer> stack = new Stack<>();
+    if(pushed == null && popped == null) return true;
+    if(pushed == null || popped == null) return false;
+    if(pushed.length == 0 && popped.length == 0) return true;
+    if(pushed.length == 0 || popped.length == 0 || pushed.length != popped.length) return false;
+    int indexPush = 0;
+    int indexPop = 0;
+    stack.push(pushed[indexPush++]);
+    while(true) {
+        while((stack.isEmpty() || stack.peek() != popped[indexPop]) && indexPush < pushed.length) {
+            stack.push(pushed[indexPush++]);
+        }
+        if(stack.peek() == popped[indexPop]) {
+            stack.pop();
+            indexPop++;
+            if(indexPop == popped.length) return true;
+        } else {
+            if(indexPush == pushed.length) return false;
+        }
+    }
+}
 ```
 
 ### 面试题32：从上到下打印二叉树

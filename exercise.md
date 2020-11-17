@@ -469,29 +469,6 @@ public ListNode getKthFromEnd(ListNode head, int k) {
 
 如果一个链表中包含环，如何找出环的入口节点？例如，在如图3.8所示的链表中，环的入口节点是3。
 
-- 思路1
-  - 确定是否有环
-  - 统计环中的节点数n
-  - 确定入口节点
-
-##### 思路1
-
-- 确定是否有环：快（一次移动2）、慢（一次移动1）指针
-  - 快指针的下一步为空，无环
-  - 重合即有环
-- 统计环中的节点数n：上述慢指针走回自己的位置，即统计出环中的节点数n
-  - 实际中这一步是与上一步同时做的，所以返回0代表无环，返回大于0代表环中的节点数n
-
-- 确定入口节点：利用两个指针，使它们间隔n，行进速度相同（都是1）
-  - 当二者重合时，即是环的入口
-
-##### 特殊输入
-
-- 链表为空
-- 链表无环
-
-##### 核心代码
-
 ```java
 public static ListNode findRingEntry(ListNode head) {
     ListNode fast = head;
@@ -537,45 +514,19 @@ public static int hasRing(ListNode head) {
 
 定义一个函数，输入一个链表的头节点，反转该链表并输出反转后链表的头节点。
 
-- 思路1: 三个指针，分别指向last、current和next
-
-##### 思路1
-
-- 初始条件
-  - last指向null
-  - current指向head
-  - next指向head.next
-- 循环体内（next为空结束循环，结束后将current指向last）
-  - 反转
-    - current指向last
-  - 移动到下一节点
-    - last指向current
-    - current指向next
-    - next指向next.next
-
-##### 特殊输入
-
-- 链表为空
-- 链表只有一个头节点（不用额外考虑，下面代码while循环条件规避了这一问题）
-
-##### 核心代码
-
 ```java
-	public static ListNode reverseList(ListNode head) {
-		if(head == null)
-			return null;
-		ListNode last = null;
-		ListNode current = head;
-		ListNode next = head.next;
-		while(next != null) {
-			current.next = last;
-			last = current;
-			current = next;
-			next = next.next;
-		}
-		current.next = last;
-		return current;
-	}
+public ListNode reverseList(ListNode head) {
+    if(head == null) return null;
+    ListNode last = null, current = head, next = head.next;
+    while(next != null) {
+        current.next = last;
+        last = current;
+        current = next;
+        next = next.next;
+    }
+    current.next = last;
+    return current;
+}
 ```
 
 ### 面试题25：合并两个排序的链表
@@ -584,56 +535,23 @@ public static int hasRing(ListNode head) {
 
 输入两个递增排序的链表，合并这两个链表并使新链表中的节点仍然是递增排序的。例如，输入图3.11中的链表1和链表2，则合并之后的升序链表如链表3所示。
 
-- 思路1：取两个链表头的较小值作为头，递归取头的next
-
-##### 思路1
-
-- 递归参数：
-  - 两个链表的头
-- 边界条件：
-  - 某个链表的头为空
-    - l1为空，返回l2
-    - l2为空，返回l1
-- 前进段：
-  - 取两个链表头的较小值作为当前头
-  - 当前头的next
-    - 如果l1的头的值较小
-      - 则l2 = l2.next
-    - 如果l2的头的值较小
-      - 则l1 = l1.next
-- 返回段：
-  - 返回当前头
-
-##### 特殊输入
-
-- l1和（或）l2为空：不用加以特殊处理，因为下面代码中递归边界条件规避了相关情形
-
-##### 核心代码
-
 ```java
-	public static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
-		if(l1 == null)
-			return l2;
-		if(l2 == null)
-			return l1;
-		ListNode listNode = null;
-		if(l1.val <= l2.val) {
-			listNode = l1;
-			listNode.next = mergeTwoLists(l1.next, l2);
-		}
-		else {
-			listNode = l2;
-			listNode.next = mergeTwoLists(l1, l2.next);
-		}
-		return listNode;
-	}
+public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+    if(l1 == null) return l2;
+    if(l2 == null) return l1;
+    ListNode head = null;
+    if(l1.val < l2.val) {
+        head = new ListNode(l1.val);
+        head.next = mergeTwoLists(l1.next, l2);
+    } else {
+        head = new ListNode(l2.val);
+        head.next = mergeTwoLists(l1, l2.next);
+    }
+    return head;
+}
 ```
 
-
-
 ### 面试题26：树的子结构
-
-
 
 ### [题目](https://leetcode-cn.com/problems/shu-de-zi-jie-gou-lcof/)
 
@@ -683,31 +601,18 @@ public static int hasRing(ListNode head) {
 ##### 核心代码
 
 ```java
-	public static boolean isSubStructure(TreeNode A, TreeNode B) {
-		if(B == null)
-			return false;
-		if(A == null)
-			return false;
-		boolean result = false;
-		if(A.val == B.val)
-			result = compareTree(A, B);
-		if(!result)
-			result = isSubStructure(A.left, B);
-		if(!result)
-			result = isSubStructure(A.right, B);
-		return result;
-	}
-	
-	public static boolean compareTree(TreeNode A, TreeNode B) {
-		if(B == null)
-			return true;
-		if(A == null)
-			return false;
-		if(A.val == B.val)
-			return compareTree(A.left, B.left) && compareTree(A.right, B.right);
-		else
-			return false;
-	}
+public boolean isSubStructure(TreeNode A, TreeNode B) {
+	if(B == null || A == null) return false;
+    if(A.val == B.val) return checkStructure(A, B);
+    else return isSubStructure(A.left, B) || isSubStructure(A.right, B);
+}
+
+public boolean checkStructure(TreeNode A, TreeNode B) {
+    if(B == null) return true;
+    if(A == null) return false;
+    if(A.val == B.val) return checkStructure(A.left, B.left) && checkStructure(A.right, B.right);
+    else return false;
+}
 ```
 
 ### 面试题27：二叉树的镜像

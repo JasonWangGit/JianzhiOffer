@@ -603,8 +603,11 @@ public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
 ```java
 public boolean isSubStructure(TreeNode A, TreeNode B) {
 	if(B == null || A == null) return false;
-    if(A.val == B.val) return checkStructure(A, B);
-    else return isSubStructure(A.left, B) || isSubStructure(A.right, B);
+    boolean result = false;
+    if(A.val == B.val) result = checkStructure(A, B);
+    if(!result) result = isSubStructure(A.left, B);
+    if(!result) result = isSubStructure(A.right, B);
+    return result;
 }
 
 public boolean checkStructure(TreeNode A, TreeNode B) {
@@ -621,52 +624,22 @@ public boolean checkStructure(TreeNode A, TreeNode B) {
 
 请完成一个函数，输入一个二叉树，该函数输出它的镜像。
 
-- 思路1：交换当前节点的左右子树（递归实现）
-
-##### 思路1
-
-- 递归参数：
-  - 树的当前节点
-- 边界条件：
-  - 当前节点的左右子树都为空
-- 前进段：
-  - 如果左子树不为空
-    - 递归交换左子树的左右子树
-  - 如果右子树不为空
-    - 递归交换右子树的左右子树
-- 返回段：
-  - 返回根节点（子树的根节点虽然返回，但无任何赋值操作）
-
-##### 特殊输入
-
-- 树为空
-- 树只有根节点
-- 树是歪脖子（或者退化为链表的树）
-
-##### 核心代码
-
 ``` java
-	public static TreeNode mirrorTree(TreeNode root) {
-		if(root == null)
-			return null;
-		if(root.left != null || root.right != null) {
-			swap(root);
-			if(root.left != null)
-				mirrorTree(root.left);
-			if(root.right != null)
-				mirrorTree(root.right);
-		}
-		return root;
-	}
+public TreeNode mirrorTree(TreeNode root) {
+    if(root == null) return null;
+    if(root.left == null && root.right == null) return root;
+    swap(root);
+    if(root.left != null) mirrorTree(root.left);
+    if(root.right != null) mirrorTree(root.right);
+    return root;
+}
 
-	public static void swap(TreeNode root) {
-		TreeNode temp = root.left;
-		root.left = root.right;
-		root.right = temp;
-	}
+public void swap(TreeNode root) {
+    TreeNode temp = root.left;
+    root.left = root.right;
+    root.right = temp;
+}
 ```
-
-
 
 ### 面试题28：对称的二叉树
 
@@ -674,49 +647,18 @@ public boolean checkStructure(TreeNode A, TreeNode B) {
 
 请实现一个函数，用来判断一棵二叉树是不是对称的。如果一棵二叉树和它的镜像一样，那么它是对称的。例如，在如图4.3所示的3棵二叉树中，第一棵二叉树是对称的，而另外两棵不是。
 
-- 思路1：根左右的前序遍历，和根右左的”前序遍历“对比（递归实现）
-
-##### 思路1
-
-- 递归参数：
-  - 树的左、右子树
-- 边界条件：
-  - 左、右都为空：true
-  - 左、右之一为空（不都为空，基于上一条）：false
-  - 左、右值不相等：false
-- 前进段：
-  - 左、右值相等
-    - 递归对比左的left和右的right
-    - 以及左的right和右的left
-      - 这里的本质是根左右与根右左
-- 返回段：
-  - 返回左的left和右的right，和左的right和右的left的与
-
-##### 特殊输入
-
-- 树为空
-- 树只有根节点（递归边界考虑，不用额外处理）
-- 树只有左子树（递归边界考虑，不用额外处理）
-
-##### 核心代码
-
 ```java
-	public static boolean isSymmetric(TreeNode root) {
-		if(root == null)
-			return true;
-		return isSymmetric(root.left, root.right);
-	}
-	
-	public static boolean isSymmetric(TreeNode A, TreeNode B) {
-		if(A == null && B == null)
-			return true;
-		if(A == null || B == null)
-			return false;
-		if(A.val == B.val)
-			return isSymmetric(A.left, B.right) && isSymmetric(A.right, B.left);
-		else
-			return false;
-	}
+public boolean isSymmetric(TreeNode root) {
+    if(root == null) return true;
+    return recur(root.left, root.right);
+}
+
+public boolean recur(TreeNode left, TreeNode right) {
+    if(left == null && right == null) return true;
+    if(left == null || right == null) return false;
+    if(left.val != right.val) return false;
+    return recur(left.left, right.right) && recur(left.right, right.left);
+}
 ```
 
 ### 面试题29：顺时针打印矩阵
@@ -757,38 +699,31 @@ public boolean checkStructure(TreeNode A, TreeNode B) {
 
 #### 核心代码
 
-```java
-	public static int[] spiralOrder(int[][] matrix) {
-		if(matrix == null)
-			return null;
-		if(matrix.length == 0 || matrix[0].length == 0)
-			return new int[0];
-		int colEnd = matrix[0].length;
-		int rowEnd = matrix.length;
-		int[] result = new int[colEnd-- * rowEnd--];
-		int start = 0;
-		int index = 0;
-		while(matrix[0].length > 2 * start && matrix.length > 2 * start)
-			index = printer(result, matrix, start++, colEnd--, rowEnd--, index);
-		return result;
-	}
-	
-	public static int printer(int[] result, int[][] matrix, 
-			int start, int colEnd, int rowEnd, int index) {
-		if(colEnd >= start)
-			for(int i = start; i <= colEnd; i++)
-				result[index++] = matrix[start][i];
-		if(rowEnd > start)
-			for(int i = start + 1; i <= rowEnd; i++)
-				result[index++] = matrix[i][colEnd];
-		if(colEnd > start && rowEnd > start)
-			for(int i = colEnd - 1; i >= start; i--)
-				result[index++] = matrix[rowEnd][i];
-		if(colEnd > start && rowEnd > start + 1)
-			for(int i = rowEnd - 1; i > start; i--)
-				result[index++] = matrix[i][start];
-		return index;
-	}
+``` java
+public int[] spiralOrder(int[][] matrix) {
+    if(matrix == null) return null;
+    if(matrix.length == 0) return new int[0];
+    int rowEnd = matrix.length, colEnd = matrix[0].length;
+    int[] result = new int[rowEnd-- * colEnd--];
+    int index = 0, start = 0;
+    while(matrix.length > 2 * start && matrix[0].length > 2 * start) {
+        for(int j = start; j <= colEnd; j++)
+            result[index++] = matrix[start][j];
+        if(rowEnd > start)
+            for(int j = start + 1; j <= rowEnd; j++)
+                result[index++] = matrix[j][colEnd];
+        if(rowEnd > start && colEnd > start)
+            for(int j = colEnd - 1; j >= start; j--)
+                result[index++] = matrix[rowEnd][j];
+        if(rowEnd > start + 1 && colEnd > start)
+            for(int j = rowEnd - 1; j >= start + 1; j--)
+                result[index++] = matrix[j][start];
+        start++;
+        rowEnd--;
+        colEnd--;
+    }
+    return result;
+}
 ```
 
 ### 面试题30：包含min函数的栈
@@ -797,77 +732,32 @@ public boolean checkStructure(TreeNode A, TreeNode B) {
 
 定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的 min 函数。在该栈中，调用 min、push 及 pop 的时间复杂度都是 O(1)。
 
-- 思路1：利用辅助栈来保存当前的最小值
-
-##### 思路1
-
-- 压入：
-  - 如果主栈为空
-    - 将当前值压入主栈和辅助栈
-  - 如果主栈不为空
-    - 将当前值压入主栈
-    - 判断主栈栈顶元素与当前值的大小关系
-      - 当前值小于主栈栈顶元素
-        - 将当前值压入辅助栈
-      - 当前值大于等于主栈栈顶元素
-        - 将辅助栈栈顶元素压入辅助栈
-- 弹出：
-  - 弹出主栈
-  - 弹出辅助栈
-- top()：
-  - 返回主栈栈顶元素
-- min()：
-  - 返回辅助栈栈顶元素
-
-##### 特殊输入
-
-- 未push情况下直接pop、top、min（**应该考虑异常处理**）
-
-##### 核心代码
-
 ```java
-class MinStack {
-	private Stack<Integer> stack;
-	private Stack<Integer> minStack;
-	
-    /** initialize your data structure here. */
-    public MinStack() {
-    	stack = new Stack<>();
-    	minStack = new Stack<>();
-    }
+Stack<Integer> stack1;
+Stack<Integer> stack2;
+public MinStack() {
+    stack1 = new Stack<>();
+    stack2 = new Stack<>();
+}
     
-    public void push(int x) {
-    	if(stack.isEmpty()) {
-    		stack.push(x);
-    		minStack.push(x);
-    	} else {
-    		stack.push(x);
-    		if(x < minStack.peek())
-    			minStack.push(x);
-    		else
-    			minStack.push(minStack.peek());
-    	}
-    	
-    }
+public void push(int x) {
+    stack1.push(x);
+    if(stack2.isEmpty()) stack2.push(x);
+    else if(x < stack2.peek()) stack2.push(x);
+    else stack2.push(stack2.peek());
+}
     
-    public void pop() {
-    	if(stack.isEmpty())
-    		return;
-    	stack.pop();
-    	minStack.pop();
-    }
+public void pop() {
+    stack1.pop();
+    stack2.pop();
+}
     
-    public int top() {
-    	if(stack.isEmpty())
-    		return -1;
-    	return stack.peek();
-    }
+public int top() {
+    return stack1.peek();
+}
     
-    public int min() {
-    	if(stack.isEmpty())
-    		return -1;
-    	return minStack.peek();
-    }
+public int min() {
+    return stack2.peek();
 }
 ```
 

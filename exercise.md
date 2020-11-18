@@ -796,49 +796,22 @@ public boolean validateStackSequences(int[] pushed, int[] popped) {
 
 #### [题目一：不分行从上到下打印二叉树](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-lcof/)
 
-从上到下打印出二叉树的每个节点，同一层的节点按照从左到右的顺序打印。例如，输入图4.6中的二叉树，则依次打印出8, 6, 10, 5, 7, 9, 11。
-
-- 思路1：利用队列，先进先出（循环实现）
-
-##### 思路1
-
-- 初始条件
-  - root入队
-- 循环体内（队列不为空）
-  - 出队并存入数组
-  - 如果当前节点有左子树
-    - 左子树入队
-  - 如果当前节点有右子树
-    - 右子树入队
-
-##### 特殊输入
-
-- 树为空
-- 树只有根节点
-- 树是歪脖子（或者退化为链表的树）
-
-##### 核心代码
-
 ```java
-	public static int[] levelOrder(TreeNode root) {
-		if(root == null)
-			return new int[0];
-		ArrayList<Integer> arrayList = new ArrayList<>();
-		Queue<TreeNode> queue = new LinkedList<>();
-		queue.offer(root);
-		while(!queue.isEmpty()) {
-			TreeNode temp = queue.poll();
-			arrayList.add(temp.val);
-			if(temp.left != null)
-				queue.offer(temp.left);
-			if(temp.right != null)
-				queue.offer(temp.right);
-		}
-		int[] result = new int[arrayList.size()];
-		for(int i = 0; i < arrayList.size(); i++)
-			result[i] = arrayList.get(i);
-		return result;
-	}
+public int[] levelOrder(TreeNode root) {
+    if(root == null) return new int[0];
+    List<TreeNode> array = new ArrayList<>();
+    Deque<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+    while(!queue.isEmpty()) {
+        if(queue.peek().left != null) queue.offer(queue.peek().left);
+        if(queue.peek().right != null) queue.offer(queue.peek().right);
+        array.add(queue.poll());
+    }
+    int[] result = new int[array.size()];
+    for(int i = 0; i < array.size(); i++)
+        result[i] = array.get(i).val;
+    return result;
+}
 ```
 
 #### [题目二：分行从上到下打印二叉树](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-ii-lcof/)
@@ -881,39 +854,40 @@ public boolean validateStackSequences(int[] pushed, int[] popped) {
 ##### 核心代码
 
 ```java
-	public static List<List<Integer>> levelOrder(TreeNode root) {
-		if(root == null)
-			return new ArrayList<>();
-		ArrayList<Integer> arrayList = new ArrayList<>();
-		Queue<TreeNode> queue = new LinkedList<>();
-		List<List<Integer>> result = new ArrayList<>();
-		int currentLevel = 1;
-		int nextLevel = 0;
-		queue.offer(root);
-		while(!queue.isEmpty()) {
-			TreeNode temp = queue.poll();
-			arrayList.add(temp.val);
-			currentLevel--;
-			if(temp.left != null) {
-				queue.offer(temp.left);
-				nextLevel++;
-			}
-			if(temp.right != null) {
-				queue.offer(temp.right);
-				nextLevel++;
-			}
-			if(currentLevel == 0) {
-				currentLevel = nextLevel;
-				nextLevel = 0;
-				ArrayList<Integer> tempArrayList = new ArrayList<>();
-				for(int i : arrayList)
-					tempArrayList.add(i);
-				result.add(tempArrayList);
-				arrayList.clear();
-			}
-		}
-		return result;
-	}
+public List<List<Integer>> levelOrder(TreeNode root) {
+    if(root == null) return new ArrayList<>();
+    List<List<Integer>> result = new ArrayList<>();
+    Deque<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+    int currentLevel = 1, nextLevel = 0;
+    List<Integer> temp = new ArrayList<>();
+    while(!queue.isEmpty()) {
+        if(queue.peek().left != null) {
+            queue.offer(queue.peek().left);
+            nextLevel++;
+        }
+        if(queue.peek().right != null) {
+            queue.offer(queue.peek().right);
+            nextLevel++;
+        }
+        temp.add(queue.poll().val);
+        currentLevel--;
+        if(currentLevel == 0) {
+            currentLevel = nextLevel;
+            nextLevel = 0;
+            addToResult(result, temp);
+        }
+    }
+    return result;
+}
+
+public void addToResult(List<List<Integer>> result, List<Integer> temp) {
+    List<Integer> tempList = new ArrayList<>();
+    for(int i : temp)
+        tempList.add(i);
+    result.add(tempList);
+    temp.clear();
+}
 ```
 
 #### [题目三：之字形打印二叉树](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-iii-lcof/)

@@ -1668,7 +1668,7 @@ class MinStack {
   - levelFlag：奇偶层标志，根为奇数层，奇数：true，偶数：false
 - 初始条件
   - levelFlag为true
-- 循环体内（死循环）
+- 循环体内（oddStack或evenStack非空）
   - 如果是奇数层（levelFlag为true）
     - oddStack出栈，并存入数组
     - 如果当前节点有左子树

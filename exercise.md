@@ -901,42 +901,6 @@ public void addToResult(List<List<Integer>> result, List<Integer> temp) {
 
 输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历结果。如果是则返回 true，否则返回 false。假设输入的数组的任意两个数字都互不相同。例如，输入数组{5, 7, 6, 9, 10, 8}，则返回true，因为这个整数序列是图4.9二叉搜索树的后序遍历结果，如果输入的数组是{7, 4, 6, 5}，则由于没有哪棵二叉搜索树的后序遍历结果是这个序列，因此返回false。
 
-- 思路1：遍历数组，确定右子树范围（递归实现）
-  - 如果右子树中存在比根小的，则返回false
-  - 如果没有，递归左右子树
-
-##### 思路1
-
-- 递归参数：
-  - 后序遍历数组
-  - 当前子树起始位置start
-  - 当前子树结束位置end
-- 边界条件：
-  - start == end
-    - 代表当前子树只有根，返回true
-- 前进段：
-  - 先遍历当前数组（循环实现）
-    - 初值：`middle = end;` `middleFlag = true;`
-    - 把第一个值大于根的位置记为middle，同时把middleFlag设为false
-    - 在middle后的元素中，如果有元素小于根：返回false
-  - 递归左、右子树
-- 返回段（**这里可优化，参考181页**）：
-  - 如果middle == end
-    - 返回左子树
-  - 如果middle == start
-    - 返回右子树
-  - 其他情况
-    - 返回左右子树的与
-
-##### 特殊输入
-
-- 数组为空
-- 数组长度为0
-- 子树某部分只有左子树或只有右子树（歪脖子）
-  - 测试用例：`int[] postorder = {1, 2, 5, 10, 6, 9, 4, 3};`
-
-##### 核心代码
-
 ```java
 public boolean verifyPostorder(int[] postorder) {
     if(postorder == null || postorder.length == 0) return true;
@@ -998,32 +962,25 @@ public boolean recur(int[] postorder, int start, int end) {
 ##### 核心代码
 
 ```java
-	public static List<List<Integer>> pathSum(TreeNode root, int sum) {
-		if(root == null)
-			return new ArrayList<>();
-		List<List<Integer>> result = new ArrayList<>();
-		Deque<Integer> deque = new LinkedList<>();
-		recur(root, deque, result, sum, 0);
-		return result;
-    }
-	
-	public static void recur(TreeNode root, Deque<Integer> deque, List<List<Integer>> result, int targerVal, int currentVal) {
-		deque.push(root.val);
-		currentVal += deque.peek();
-		if(currentVal == targerVal && root.left == null && root.right == null) {
-			Iterator<Integer> iterator = deque.descendingIterator();
-			ArrayList<Integer> arrayList = new ArrayList<>();
-			while(iterator.hasNext())
-				arrayList.add(iterator.next());
-			result.add(arrayList);
-		}
-		if(root.left != null)
-			recur(root.left, deque, result, targerVal, currentVal);
-		if(root.right != null)
-			recur(root.right, deque, result, targerVal, currentVal);
-		currentVal -= deque.peek(); // 这行无意义
-		deque.pop();
-	}
+public List<List<Integer>> pathSum(TreeNode root, int sum) {
+    List<List<Integer>> result = new ArrayList<>();
+    Deque<Integer> stack = new LinkedList<>();
+    recur(root, result, stack, 0, sum);
+}
+
+public int recur(TreeNode root, List<List<Integer>> result, Deque<Integer> stack, int currentSum, int sum) {
+    if(root.left == null && root.right == null && currentSum == sum)  addToResult(result, stack);
+    currentSum += root.val;
+    if(currentSum > sum) return ;
+    if(root.left != null) currentSum += recur(root.left, result, stack, currentSum, sum);
+    if(root.right != null) currentSum += recur(root.right, result, stack, currentSum, sum);
+    
+}
+
+public void addToResult(List<List<Integer>> result, Deque<TreeNode> stack) {
+    
+}
+
 ```
 
 ### 面试题35：复杂链表的复制

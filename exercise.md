@@ -816,43 +816,6 @@ public int[] levelOrder(TreeNode root) {
 
 #### [题目二：分行从上到下打印二叉树](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-ii-lcof/)
 
-从上到下按层打印二叉树，同一层的节点按从左到右的顺序打印，每一层打印到一行。例如打印图4.7中的二叉树结果为：
-
-8
-
-6	10
-
-5	7	9	11
-
-- 思路1：利用队列，先进先出（循环实现）
-  - 增加两个变量currentLevel和nextLevel来统计当前层的节点数和下一层的节点数来控制换行
-
-##### 思路1
-
-- 参数
-  - currentLevel和nextLevel
-- 初始条件
-  - currentLevel为1（因为根节点算1个）
-  - nextLevel
-- 循环体内（死循环）
-  - 出队并存入数组，currentLevel--
-  - 如果当前节点有左子树
-    - 左子树入队，nextLevel++
-  - 如果当前节点有右子树
-    - 右子树入队，nextLevel++
-  - 如果currentLevel为0
-    - 换行：实际操作为将目前临时ArrayList添加到结果中，并清空ArrayList
-      - 注意拷贝方式
-    - currentLevel = nextLevel，nextLevel = 0
-
-##### 特殊输入
-
-- 树为空
-- 树只有根节点
-- 树是歪脖子（或者退化为链表的树）
-
-##### 核心代码
-
 ```java
 public List<List<Integer>> levelOrder(TreeNode root) {
     if(root == null) return new ArrayList<>();
@@ -892,100 +855,44 @@ public void addToResult(List<List<Integer>> result, List<Integer> temp) {
 
 #### [题目三：之字形打印二叉树](https://leetcode-cn.com/problems/cong-shang-dao-xia-da-yin-er-cha-shu-iii-lcof/)
 
-请实现一个函数按照之字形顺序打印二叉树，即第一行按照从左到右的顺序打印，第二层按照从右到左的顺序打印，第三行再按照从左到右的顺序打印，其他行以此类推。例如，按之字形顺序打印图4.8中二叉树的结果为：
-
-1
-
-3	2
-
-4	5	6	7
-
-15	14	13	12	11	10	9	8
-
-- 思路1：利用栈，后进先出（循环实现）
-  - 但要利用两个栈，而不是一个栈：分奇数层栈oddStack、偶数层栈evenStack
-    - 奇数层先左后右
-    - 偶数层先右后左
-
-##### 思路1
-
-- 参数
-  - levelFlag：奇偶层标志，根为奇数层，奇数：true，偶数：false
-- 初始条件
-  - levelFlag为true
-- 循环体内（死循环）
-  - 如果是奇数层（levelFlag为true）
-    - oddStack出栈，并存入数组
-    - 如果当前节点有左子树
-      - evenStack入栈
-    - 如果当前节点有右子树
-      - evenStack入栈
-    - 如果oddStack为空，levelFlag设为false，并换行：实际操作为将目前临时ArrayList添加到结果中，并清空ArrayList
-      - 注意拷贝方式
-  - 如果是偶数层（levelFlag为false）
-    - evenStack出栈，并存入数组
-    - 如果当前节点有右子树
-      - oddStack入栈
-    - 如果当前节点有左子树
-      - oddStack入栈
-    - 如果evenStack为空，levelFlag设为true，并换行：实际操作为将目前临时ArrayList添加到结果中，并清空ArrayList
-      - 注意拷贝方式
-
-##### 特殊输入
-
-- 树为空
-- 树只有根节点
-- 树是歪脖子（或者退化为链表的树）
-
-##### 核心代码
-
 ```java
-	public static List<List<Integer>> levelOrder(TreeNode root) {
-		if(root == null)
-			return new ArrayList<>();
-		Stack<TreeNode> stackOdd = new Stack<>();
-		Stack<TreeNode> stackEven = new Stack<>();
-		ArrayList<Integer> arrayList = new ArrayList<>();
-		List<List<Integer>> result = new ArrayList<>();
-		boolean levelFlag = true;
-		stackOdd.push(root);
-		
-		while(!stackOdd.isEmpty() || !stackEven.isEmpty()) {
-			TreeNode temp;
-			if(levelFlag) {
-				temp = stackOdd.pop();
-				arrayList.add(temp.val);
-				if(temp.left != null)
-					stackEven.push(temp.left);
-				if(temp.right != null)
-					stackEven.push(temp.right);
-				if(stackOdd.isEmpty()) {
-					levelFlag = false;
-					addToResult(result, arrayList);
-				} 
-			} else {
-				temp = stackEven.pop();
-				arrayList.add(temp.val);
-				if(temp.right != null)
-					stackOdd.push(temp.right);
-				if(temp.left != null)
-					stackOdd.push(temp.left);
-				if(stackEven.isEmpty()) {
-					levelFlag = true;
-					addToResult(result, arrayList);
-				}
-			}
-		}
-		return result;
+public List<List<Integer>> levelOrder(TreeNode root) {
+    if(root == null) return new LinkedList<>();
+    Deque<TreeNode> oddStack = new LinkedList<>();
+    Deque<TreeNode> evenStack = new LinkedList<>();
+    List<List<Integer>> result = new ArrayList<>();
+    boolean levelFlag = true;
+    List<Integer> temp = new ArrayList<>();
+    oddStack.push(root);
+    while(!oddStack.isEmpty() || !evenStack.isEmpty()) {
+        if(levelFlag) {
+            if(oddStack.peek().left != null) evenStack.push(oddStack.peek().left);
+            if(oddStack.peek().right != null) evenStack.push(oddStack.peek().right);
+            temp.add(oddStack.pop().val);
+            if(oddStack.isEmpty()) {
+                addToResult(result, temp);
+                levelFlag = false;
+            }
+        } else {
+            if(evenStack.peek().right != null) oddStack.push(evenStack.peek().right);
+            if(evenStack.peek().left != null) oddStack.push(evenStack.peek().left);
+            temp.add(evenStack.pop().val);
+            if(evenStack.isEmpty()) {
+                addToResult(result, temp);
+                levelFlag = true;
+            }
+        }
     }
-	
-	public static void addToResult(List<List<Integer>> result, List<Integer> arrayList) {
-		ArrayList<Integer> tempArrayList = new ArrayList<>();
-		for(int i : arrayList)
-			tempArrayList.add(i);
-		result.add(tempArrayList);
-		arrayList.clear();
-	}
+    return result;
+}
+
+public void addToResult(List<List<Integer>> result, List<Integer> temp) {
+    List<Integer> tempList = new ArrayList<>();
+    for(int i : temp)
+        tempList.add(i);
+    result.add(tempList);
+    temp.clear();
+}
 ```
 
 ### 面试题33：二叉搜索树的后序遍历序列
@@ -1031,35 +938,28 @@ public void addToResult(List<List<Integer>> result, List<Integer> temp) {
 ##### 核心代码
 
 ```java
-	public static boolean verifyPostorder(int[] postorder) {
-		if(postorder == null)
-			return false;
-		if(postorder.length == 0)
-			return true;
-		return recur(postorder, 0, postorder.length - 1);
+public boolean verifyPostorder(int[] postorder) {
+    if(postorder == null || postorder.length == 0) return true;
+    return recur(postorder, 0, postorder.length - 1);
+}
+
+public boolean recur(int[] postorder, int start, int end) {
+    if(start == end) return true;
+    boolean middleFlag = true;
+    int middle = end;
+    int rootVal = postorder[end];
+    for(int i = start; i < end; i++) {
+        if(middleFlag && postorder[i] > rootVal) {
+            middle = i;
+            middleFlag = false;
+        } else if(!middleFlag) {
+            if(postorder[i] < rootVal) return false;
+        }
     }
-	
-	public static boolean recur(int [] postorder, int start, int end) {
-		if(start == end)
-			return true;
-		int middle = end;
-		boolean middleFlag = true;
-		for(int i = start; i <= end; i++) {
-			if(postorder[i] > postorder[end] && middleFlag) {
-				middleFlag = false;
-				middle = i;
-			}
-			if(i > middle)
-				if(postorder[i] < postorder[end])
-					return false;
-		}
-		if(middle == end)
-			return recur(postorder, start, middle - 1);
-		else if(middle == start)
-			return recur(postorder, middle, end - 1);
-		else
-			return recur(postorder, start, middle - 1) && recur(postorder, middle, end - 1);
-	}
+    if(middle == start) return recur(postorder, middle, end - 1);
+    else if(middle == end) return recur(postorder, start, middle - 1);
+    else return recur(postorder, start, middle - 1) && recur(postorder, middle, end - 1);
+}
 ```
 
 ### 面试题34：二叉树中和为某一值的路径

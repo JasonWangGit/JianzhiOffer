@@ -1,3 +1,61 @@
+### 快速排序
+
+```java
+public static int[] sort(int[] nums) {
+    recur(nums, 0, nums.length - 1);
+    return nums;
+}
+	
+public static void recur(int[] nums, int left, int right) {
+    if(left < right) {
+        int middle = partition(nums, left, right);
+        recur(nums, left, middle - 1);
+        recur(nums, middle + 1, right);
+    }
+}
+
+public static int partition(int[] nums, int left, int right) {
+    if(left == right) return left;
+    int pivotal = nums[left];
+    int i = left + 1, j = right;
+    while(true) {
+        while(nums[i] < pivotal && i < right) i++;
+        while(nums[j] > pivotal && j > left) j--;
+        if(i < j) swap(nums, i, j);
+        else break;
+    }
+    swap(nums, left, j);
+    return j;
+}
+
+public static void swap(int[] nums, int i, int j) {
+    int temp = nums[i];
+    nums[i] = nums[j];
+    nums[j] = temp;
+}
+```
+
+### 线程安全单例模式
+
+```java
+public class SingletonThreadSafe {
+	private static volatile SingletonThreadSafe singletonInstance;
+    
+    private static SingletonThreadSafe();
+    
+    public static getInstance() {
+        if(singletonInstance == null) {
+            synchronized(SingletonThreadSafe.class) {
+                if(singletonInstance == null) {
+                    singletonInstance = new SingletonThreadSafe();
+                }
+            }
+        }
+        return singletonInstance;
+    }
+}
+```
+
 ### 面试题3：数组中重复的数字
 
 #### [题目一：找出数组中重复的数字](https://leetcode-cn.com/problems/shu-zu-zhong-zhong-fu-de-shu-zi-lcof)
@@ -963,24 +1021,30 @@ public boolean recur(int[] postorder, int start, int end) {
 
 ```java
 public List<List<Integer>> pathSum(TreeNode root, int sum) {
+    if(root == null) return new ArrayList<>();
     List<List<Integer>> result = new ArrayList<>();
     Deque<Integer> stack = new LinkedList<>();
     recur(root, result, stack, 0, sum);
+    return result;
 }
 
-public int recur(TreeNode root, List<List<Integer>> result, Deque<Integer> stack, int currentSum, int sum) {
-    if(root.left == null && root.right == null && currentSum == sum)  addToResult(result, stack);
+public void recur(TreeNode root, List<List<Integer>> result, Deque<Integer> stack, int currentSum, int sum) {
+    stack.push(root.val);
     currentSum += root.val;
-    if(currentSum > sum) return ;
-    if(root.left != null) currentSum += recur(root.left, result, stack, currentSum, sum);
-    if(root.right != null) currentSum += recur(root.right, result, stack, currentSum, sum);
-    
+    if(root.left == null && root.right == null && currentSum == sum)  addToResult(result, stack);
+    if(currentSum > sum) return;
+    if(root.left != null) recur(root.left, result, stack, currentSum, sum);
+    if(root.right != null) recur(root.right, result, stack, currentSum, sum);
+    stack.pop();
 }
 
-public void addToResult(List<List<Integer>> result, Deque<TreeNode> stack) {
-    
+public void addToResult(List<List<Integer>> result, Deque<Integer> stack) {
+    List<Integer> tempList = new ArrayList<>();
+    Iterator<Integer> iterator = stack.descendingIterator();
+    while(iterator.hasNext())
+         tempList.add(iterator.next());
+    result.add(tempList);
 }
-
 ```
 
 ### 面试题35：复杂链表的复制

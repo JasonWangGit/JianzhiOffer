@@ -1032,7 +1032,6 @@ public void recur(TreeNode root, List<List<Integer>> result, Deque<Integer> stac
     stack.push(root.val);
     currentSum += root.val;
     if(root.left == null && root.right == null && currentSum == sum)  addToResult(result, stack);
-    if(currentSum > sum) return;
     if(root.left != null) recur(root.left, result, stack, currentSum, sum);
     if(root.right != null) recur(root.right, result, stack, currentSum, sum);
     stack.pop();
